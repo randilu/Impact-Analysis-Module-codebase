@@ -2,8 +2,7 @@ from pytrends.request import TrendReq
 
 pytrends = TrendReq(hl='en-US', tz=330)
 
-kw_list = ["Storm"]
-pytrends.build_payload(kw_list, cat=0, timeframe='2018-09-30 2018-10-06', geo='', gprop='')
+kw_list = ["Storm", "Prime Minister"]
 
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend = TrendReq()
@@ -15,9 +14,9 @@ pytrend.build_payload(kw_list, cat=0, timeframe='2018-09-01 2018-10-06', geo='LK
 interest_over_time_df = pytrend.interest_over_time()
 print(interest_over_time_df)
 
-# # Interest by Region
-# interest_by_region_df = pytrend.interest_by_region()
-# print(interest_by_region_df.head())
+# Interest by Region
+interest_by_region_df = pytrend.interest_by_region()
+print(interest_by_region_df.head())
 #
 # # Related Queries, returns a dictionary of dataframes
 # related_queries_dict = pytrend.related_queries()
