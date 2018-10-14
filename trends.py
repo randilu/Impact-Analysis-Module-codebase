@@ -8,7 +8,7 @@ kw_list = ["Storm", "Prime Minister"]
 pytrend = TrendReq()
 
 # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
-pytrend.build_payload(kw_list, cat=0, timeframe='2018-09-01 2018-10-06', geo='LK')
+pytrend.build_payload(kw_list, cat=0, timeframe='2018-09-01 2018-10-10', geo='LK')
 
 # Interest Over Time
 interest_over_time_df = pytrend.interest_over_time()
