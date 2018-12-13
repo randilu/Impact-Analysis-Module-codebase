@@ -62,9 +62,16 @@ df = interest_over_time_df.drop(columns=['isPartial'])
 columns = pd.DataFrame(columns=df.columns)
 rounded.columns = [columns]
 print(rounded)
-trend_file3 = rounded.to_csv(
-    "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/raw/trend_data/trend_file3.csv", sep='\t',
-    encoding='utf-8')
-trend_file2 = open(
-    "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/raw/trend_data/trend_file2.csv", "w")
-trend_file2.write(str(rounded))
+trend_file3 = rounded.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/raw/trend_data/trend_file3.csv", sep='\t',encoding='utf-8')
+# trend_file2 = open("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/raw/trend_data/trend_file2.csv", "w")
+# trend_file2.write(str(rounded))
+
+stock_data_df=pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/cse_data/CSE_market_indices_2017 - Sheet1.csv")
+stock_data_df['date'] = pd.to_datetime(stock_data_df['date'], format="%Y/%m/%d")
+stock_data_df=stock_data_df.set_index('date')
+
+result = pd.concat([rounded, stock_data_df], axis=1, join_axes=[rounded.index])
+print(stock_data_df)
+print(result)
+print(rounded.index)
+print(stock_data_df.index)
