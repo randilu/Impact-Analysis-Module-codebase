@@ -1,39 +1,37 @@
-from pandas import Series, DataFrame
-from pytrends.request import TrendReq
-
-import numpy as np
 import pandas as pd
-from sklearn import preprocessing
+from pytrends.request import TrendReq
+from src.data.fetch_trends_utils import normalize_trends
 
 pytrends = TrendReq(hl='en-US', tz=330)
 
-kw_list = ["Storm", "mahinda", "Prime Minister", "ranil", "home"]
+# kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
+kw_list = [['Storm'], ['mahinda'], ['Prime Minister'], ['ranil'], ['home'], ['Toyota']]
+# kw_list = [['Storm']]
+
 
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
-pytrend = TrendReq()
+pytrend1 = TrendReq()
+pytrend2 = TrendReq()
+# list which contains set of data frames each corresponding to a keyword
+joined_trend_dfs_list = []
+for i, sub_list in enumerate(kw_list, start=0):
+    # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
+    pytrend1.build_payload(sub_list, cat=0, timeframe='2017-01-01 2017-09-27', geo='LK')
+    pytrend2.build_payload(sub_list, cat=0, timeframe='2017-09-27 2017-12-30', geo='LK')
 
-# Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
-pytrend.build_payload(kw_list, cat=0, timeframe='2017-01-01 2017-12-31', geo='LK')
+    # Interest Over Time
+    interest_over_time_df1 = pytrend1.interest_over_time()
+    interest_over_time_df2 = pytrend2.interest_over_time()
+    print(interest_over_time_df1)
+    print(interest_over_time_df2)
+    rounded_df1 = normalize_trends(interest_over_time_df1, sub_list)
+    rounded_df2 = normalize_trends(interest_over_time_df2, sub_list)
+    frames = [rounded_df1, rounded_df2]
+    # joining the data frames and appending into above specified list
+    joined_trend_dfs_list.append(pd.concat(frames))
 
-# Interest Over Time
-interest_over_time_df = pytrend.interest_over_time()
-print(interest_over_time_df)
-
-'''
-x_array = np.array(interest_over_time_df.get(kw_list[0]))
-normalized_X = preprocessing.normalize([x_array], 'max')
-for value in normalized_X:
-    y_array = value
-    for element in value:
-        print(round(float(element), 2))
-interest_over_time_df['Normalized_Trend'] = Series(y_array, index=interest_over_time_df.index)
-json_data=interest_over_time_df.to_json('temp.json', orient='records', lines=True)
-print(y_array)
-print(interest_over_time_df)
-trend_file1 = open("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/raw/trend_data/trend_file1.xlsx", "w")
-trend_file1.write(str(interest_over_time_df))
-
-'''
+# concatenating all the data frames to single data frame
+combined_trend_data_df = pd.concat(joined_trend_dfs_list, axis=1, sort=False)
 
 # Interest by Region
 # interest_by_region_df = pytrend.interest_by_region()
@@ -52,26 +50,15 @@ trend_file1.write(str(interest_over_time_df))
 # suggestions_dict = pytrend.suggestions(keyword='pizza')
 # print(suggestions_dict)
 
-x = interest_over_time_df.get(kw_list)  # returns a numpy array
-min_max_scaler = preprocessing.MinMaxScaler()
-x_scaled = min_max_scaler.fit_transform(x)
-df = DataFrame(x_scaled)
-rounded = df.round(2)
-rounded.index = interest_over_time_df.index
-df = interest_over_time_df.drop(columns=['isPartial'])
-columns = pd.DataFrame(columns=df.columns)
-rounded.columns = [columns]
-print(rounded)
-trend_file3 = rounded.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/raw/trend_data/trend_file3.csv", sep='\t',encoding='utf-8')
-# trend_file2 = open("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/raw/trend_data/trend_file2.csv", "w")
-# trend_file2.write(str(rounded))
-
-stock_data_df=pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/cse_data/CSE_market_indices_2017 - Sheet1.csv")
+# Loading local stock data
+stock_data_df = pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/cse_data/CSE_market_indices_2017 - Sheet1.csv")
 stock_data_df['date'] = pd.to_datetime(stock_data_df['date'], format="%Y/%m/%d")
-stock_data_df=stock_data_df.set_index('date')
+stock_data_df = stock_data_df.set_index('date')
 
-result = pd.concat([rounded, stock_data_df], axis=1, join_axes=[rounded.index])
+#
+# combining trend data and stock data
+#
+result = pd.concat([combined_trend_data_df, stock_data_df], axis=1, sort=False)
 print(stock_data_df)
 print(result)
-print(rounded.index)
-print(stock_data_df.index)
+stock_trend_combined = result.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/trend_data/stock_trend_combined.csv",sep='\t', encoding='utf-8')
