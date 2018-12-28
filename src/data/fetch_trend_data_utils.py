@@ -14,3 +14,17 @@ def normalize_trends(frame, kw_list):
     rounded.columns = [columns]
     rounded.index = rounded.index.normalize()
     return rounded
+
+
+# Remove weekends from a dataframe
+def remove_weekends(dataframe):
+    # Reset index to use ix
+    dataframe = dataframe.reset_index(drop=True)
+    weekends = []
+    # Find all of the weekends
+    for i, date in enumerate(dataframe['date']):
+        if (date.weekday() ==5) or (date.weekday() == 6):
+            weekends.append(i)
+    # Drop the weekends
+    dataframe = dataframe.drop(weekends, axis=0)
+    return dataframe
