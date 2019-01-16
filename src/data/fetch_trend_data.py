@@ -1,6 +1,6 @@
 import pandas as pd
 from pytrends.request import TrendReq
-from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends
+from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact
 
 pytrends = TrendReq(hl='en-US', tz=330)
 
@@ -65,7 +65,8 @@ result_df.set_index('date', drop=False, inplace=True)
 result_df = remove_weekends(result_df)
 stock_trend_combined = result_df.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/trend_data/stock_trend_combined.csv",sep='\t', encoding='utf-8', index=False)
 formated_df = pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/trend_data/stock_trend_combined.csv",sep='\t', encoding='utf-8')
-formated_df.columns = formated_df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '')
+formated_df.columns = formated_df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
 formated_df = formated_df.dropna()
+add_impact(formated_df)
 print(formated_df)
 formated_df.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/trend_data/stock_trend_formated.csv",sep='\t', encoding='utf-8', index=False)
