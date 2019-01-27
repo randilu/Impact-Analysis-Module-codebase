@@ -34,10 +34,18 @@ def add_impact(df):
     df['isImpacted'] = 'NI'
     # iterate through each tupple in the dataframe
     for line, row in enumerate(df.itertuples(), 1):
-        if abs(row.plantations_1) > 3 and abs(row.max_value) > 0.5:
+        if abs(row.plantations_1) > 1.5:
+            # and abs(row.max_value) > 0.5:
             df.at[row.Index, 'isImpacted'] = "I"
             # df.set_value(row.Index, 'isImpacted', 'I')
     # for row in df.itertuples():
     #     if df.at[row, 'plantations.1'] > 3 and df.at[row, 'max_value'] > 0.5:
     #         df.at[row, 'isImpacted'] = 'I'
     return
+
+
+def add_impact_from_changepoints(file, stock_df):
+    cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
+    print(cp_df)
+    impacted_df = pd.merge(cp_df, stock_df, on='date', how='inner')
+    impacted_df.to_csv('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/impacted.csv', sep='\t', encoding='utf-8', index=False)
