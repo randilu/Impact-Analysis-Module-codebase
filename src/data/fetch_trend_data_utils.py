@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pandas import DataFrame
 from sklearn import preprocessing
 
@@ -49,3 +50,18 @@ def add_impact_from_changepoints(file, stock_df):
     print(cp_df)
     impacted_df = pd.merge(cp_df, stock_df, on='date', how='inner')
     impacted_df.to_csv('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/impacted.csv', sep='\t', encoding='utf-8', index=False)
+
+
+def deserialize_json(file):
+    data = pd.read_json(file)
+
+
+def display_max_cols(cols):
+    desired_width = 320
+    pd.set_option('display.width', desired_width)
+    np.set_printoptions(linewidth=desired_width)
+    pd.set_option('display.max_columns', cols)
+
+
+def split_sublist(sublist):
+    return sublist[0], sublist[1]

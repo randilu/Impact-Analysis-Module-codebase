@@ -1,20 +1,28 @@
 import pandas as pd
 from pytrends.request import TrendReq
-from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints
+
+# from data.external.kw_list import new_list
+from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints, \
+    split_sublist
+
+# display_max_cols(30)
 
 pytrends = TrendReq(hl='en-US', tz=330)
 
 # kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
 # kw_list = [['Tea'], ['gsp+'], ['floods'], ['Prime Minister'], ['Ceylon Tea']]
-kw_list = [['Storm']]
-
-
+# kw_list = [['Tea'], ['randilu'], ['floods'], ['Tea']]
+kw_list = [['tea', '-1']]
+# kw_list = new_list
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend1 = TrendReq()
 pytrend2 = TrendReq()
 # list which contains set of data frames each corresponding to a keyword
 joined_trend_dfs_list = []
 for i, sub_list in enumerate(kw_list, start=0):
+    sub_list, sentiment = split_sublist(sub_list)
+    int_sentiment = int(sentiment)
+    sub_list = sub_list.split()
     # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
     pytrend1.build_payload(sub_list, cat=0, timeframe='2017-01-01 2017-09-27', geo='LK')
     pytrend2.build_payload(sub_list, cat=0, timeframe='2017-09-28 2017-12-30', geo='LK')
@@ -22,10 +30,14 @@ for i, sub_list in enumerate(kw_list, start=0):
     # Interest Over Time
     interest_over_time_df1 = pytrend1.interest_over_time()
     interest_over_time_df2 = pytrend2.interest_over_time()
+    if interest_over_time_df1.empty or interest_over_time_df2.empty:
+        continue
     # print(interest_over_time_df1)
     # print(interest_over_time_df2)
     rounded_df1 = normalize_trends(interest_over_time_df1, sub_list)
     rounded_df2 = normalize_trends(interest_over_time_df2, sub_list)
+    rounded_df1 *= int_sentiment
+    rounded_df2 *= int_sentiment
     frames = [rounded_df1, rounded_df2]
     # joining the data frames and appending into above specified list
     joined_trend_dfs_list.append(pd.concat(frames))
@@ -68,7 +80,7 @@ stock_trend_combined = result_df.to_csv("/home/randilu/fyp_impact analysis modul
 formated_df = pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/trend_data/stock_trend_combined.csv",sep='\t', encoding='utf-8')
 formated_df.columns = formated_df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
 formated_df = formated_df.dropna()
-add_impact_from_changepoints('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/changepoints.csv', formated_df)
+# add_impact_from_changepoints('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/changepoints.csv', formated_df)
 add_impact(formated_df)
 print(formated_df)
 formated_df.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/trend_data/stock_trend_formated.csv",sep='\t', encoding='utf-8', index=False)
