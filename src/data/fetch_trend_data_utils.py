@@ -49,7 +49,9 @@ def add_impact_from_changepoints(file, stock_df):
     cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
     print(cp_df)
     impacted_df = pd.merge(cp_df, stock_df, on='date', how='inner')
-    impacted_df.to_csv('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/impacted.csv', sep='\t', encoding='utf-8', index=False)
+    impacted_df.to_csv(
+        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/impacted.csv',
+        sep='\t', encoding='utf-8', index=False)
 
 
 def deserialize_json(file):
@@ -65,3 +67,14 @@ def display_max_cols(cols):
 
 def split_sublist(sublist):
     return sublist[0], sublist[1]
+
+
+def create_news_vector(df):
+    col_list = list(df)
+    del col_list[-1]
+    return df[col_list].sum(axis=1)
+
+
+def add_max_value(df):
+    max_val = lambda x: max(x.min(), x.max(), key=abs)
+    df['max_value'] = df.apply(max_val, axis=1)

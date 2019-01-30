@@ -3,7 +3,7 @@ from pytrends.request import TrendReq
 
 # from data.external.kw_list import new_list
 from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints, \
-    split_sublist
+    split_sublist, create_news_vector, add_max_value
 
 # display_max_cols(30)
 
@@ -12,7 +12,7 @@ pytrends = TrendReq(hl='en-US', tz=330)
 # kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
 # kw_list = [['Tea'], ['gsp+'], ['floods'], ['Prime Minister'], ['Ceylon Tea']]
 # kw_list = [['Tea'], ['randilu'], ['floods'], ['Tea']]
-kw_list = [['tea', '-1']]
+kw_list = [['tea', '-1'], ['fertilizer', '1'], ['rain', '1']]
 # kw_list = new_list
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend1 = TrendReq()
@@ -44,7 +44,10 @@ for i, sub_list in enumerate(kw_list, start=0):
 
 # concatenating all the data frames to single data frame
 combined_trend_data_df = pd.concat(joined_trend_dfs_list, axis=1, sort=False)
-combined_trend_data_df['max_value'] = combined_trend_data_df.max(axis=1)
+print(combined_trend_data_df)
+add_max_value(combined_trend_data_df)
+combined_trend_data_df['daily_news_vector_sum'] = create_news_vector(combined_trend_data_df)
+print(combined_trend_data_df)
 
 # Interest by Region
 # interest_by_region_df = pytrend.interest_by_region()
