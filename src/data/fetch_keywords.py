@@ -9,7 +9,7 @@ with open(jfile, 'r') as f:
 
 events = jdata['events']
 events_df = json_normalize(events)
-# print(events_df)
+print(events_df)
 # df.columns = df.columns.map(lambda x: x.split(".")[-1])
 # print(df.head())
 

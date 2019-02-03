@@ -1,6 +1,6 @@
 import pandas as pd
 from pytrends.request import TrendReq
-
+from src.data.fetch_kw_format1 import kw_sent_list
 # from data.external.kw_list import new_list
 from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints, \
     split_sublist, create_news_vector, add_max_value
@@ -9,10 +9,11 @@ from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, a
 
 pytrends = TrendReq(hl='en-US', tz=330)
 
+kw_list = kw_sent_list
+
 # kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
 # kw_list = [['Tea'], ['gsp+'], ['floods'], ['Prime Minister'], ['Ceylon Tea']]
-# kw_list = [['Tea'], ['randilu'], ['floods'], ['Tea']]
-kw_list = [['tea', '-1'], ['fertilizer', '1'], ['rain', '1']]
+# kw_list = [['tea', '-1'], ['fertilizer', '1'], ['rain', '1']]
 # kw_list = new_list
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend1 = TrendReq()
