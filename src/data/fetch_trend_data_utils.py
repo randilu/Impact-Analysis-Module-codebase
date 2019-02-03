@@ -1,3 +1,5 @@
+import csv
+
 import pandas as pd
 import numpy as np
 from pandas import DataFrame
@@ -78,3 +80,10 @@ def create_news_vector(df):
 def add_max_value(df):
     max_val = lambda x: max(x.min(), x.max(), key=abs)
     df['max_value'] = df.apply(max_val, axis=1)
+
+
+def save_dictionary_to_csv(dic, file):
+    with open(file, 'wb') as f:
+        w = csv.writer(f)
+        w.writerow(dic.keys())
+        w.writerow(dic.values())
