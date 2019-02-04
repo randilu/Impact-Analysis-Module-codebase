@@ -1,5 +1,6 @@
 import csv
-
+import json
+import codecs
 import pandas as pd
 import numpy as np
 from pandas import DataFrame
@@ -83,7 +84,18 @@ def add_max_value(df):
 
 
 def save_dictionary_to_csv(dic, file):
-    with open(file, 'wb') as f:
+    with open(file, 'w') as f:
         w = csv.writer(f)
         w.writerow(dic.keys())
         w.writerow(dic.values())
+
+
+def create_json_from_df(df):
+    return json.dumps(json.loads(df.reset_index().to_json(orient='records')), indent=2)
+
+
+def write_json_data_to_file(file, json_data):
+    with open(file, 'w') as outfile:
+        json.dump(json_data, outfile)
+    # with open(file, 'wb') as f:
+    #     json.dump(json_data, codecs.getwriter('utf-8')(f), ensure_ascii=False)

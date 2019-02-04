@@ -9,11 +9,14 @@ display_max_cols(30)
 
 pytrends = TrendReq(hl='en-US', tz=330)
 
-# kw_list = kw_sent_list
+kw_list = kw_sent_list
+print(kw_sent_list)
 
 # kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
 # kw_list = [['Tea'], ['gsp+'], ['floods'], ['Prime Minister'], ['Ceylon Tea']]
-kw_list = [['tea', '-1'], ['fertilizer', '1']]
+# kw_list = [['tea', '-1'], ['Prime Minister', '1']]
+# kw_list = [['tea', '-1'], ['Prime Minister', '1']]
+
 # kw_list = new_list
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend1 = TrendReq()
@@ -23,7 +26,8 @@ joined_trend_dfs_list = []
 for i, sub_list in enumerate(kw_list, start=0):
     sub_list, sentiment = split_sublist(sub_list)
     int_sentiment = int(sentiment)
-    sub_list = sub_list.split()
+    sub_list = [sub_list]
+    print(sub_list)
     # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
     pytrend1.build_payload(sub_list, cat=0, timeframe='2017-01-01 2017-09-27', geo='LK')
     pytrend2.build_payload(sub_list, cat=0, timeframe='2017-09-28 2017-12-30', geo='LK')
@@ -86,7 +90,7 @@ stock_trend_combined = result_df.to_csv("/home/randilu/fyp_impact analysis modul
 formated_df = pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/trend_data/stock_trend_combined.csv",sep='\t', encoding='utf-8')
 formated_df.columns = formated_df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
 formated_df = formated_df.dropna()
-formated_df['kw_max'] = formated_df['kw_max'].str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
+formated_df['kw_max'] = formated_df['kw_max'].str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
 add_impact_from_changepoints('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/changepoints.csv', formated_df)
 # add_impact(formated_df)
 print(formated_df)

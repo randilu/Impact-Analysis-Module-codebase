@@ -26,14 +26,24 @@ df1 = df1.reset_index()
 df1.columns = df1.columns.tolist()
 # print(df1)
 events = df1[['event', 'keyword_1']]
+events.drop_duplicates(subset='keyword_1', keep="last", inplace=True)
+events.reset_index(drop=True, inplace=True)
+events.to_csv(
+    '/home/randilu/fyp_impact analysis module/impact_analysis_module/src/data/dictionaries/event_dictionary.csv',
+    sep=',', encoding='utf-8', index=False)
 print(events)
-events_dic = events.set_index('keyword_1').to_dict()
-print(events_dic)
 
-print(events_dic.get("event", "key not Found"))
+#
+# create dictionary of keywords and event
+#
+
+events_dictionary = events.set_index('keyword_1').to_dict(orient="index")
+print(events_dictionary.get('activism'))
+
 # save the dictionary to csv
-# save_dictionary_to_csv(events_dic,
-#                        '/home/randilu/fyp_impact analysis module/impact_analysis_module/src/data/dictionaries/events_dic.csv')
+save_dictionary_to_csv(events_dictionary,
+                       '/home/randilu/fyp_impact analysis module/impact_analysis_module/src/data/dictionaries/events_dic.csv')
+
 
 df_of_kw_sent = df1[['keyword_1', 'sentiment']]
 df_of_kw_sent.drop_duplicates(subset='keyword_1', keep="last", inplace=True)
