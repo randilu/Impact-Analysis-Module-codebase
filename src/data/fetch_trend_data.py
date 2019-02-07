@@ -1,12 +1,12 @@
 import pandas as pd
 from pytrends.request import TrendReq
-from src.data.fetch_kw_format1 import kw_sent_list
+from src.data.fetch_kw_format2 import kw_sent_list
 # from data.external.kw_list import new_list
 from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints, \
     split_sublist, create_news_vector, add_max_value, display_max_cols
 
 display_max_cols(30)
-
+'''
 pytrends = TrendReq(hl='en-US', tz=330)
 
 kw_list = kw_sent_list
@@ -14,8 +14,7 @@ print(kw_sent_list)
 
 # kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
 # kw_list = [['Tea'], ['gsp+'], ['floods'], ['Prime Minister'], ['Ceylon Tea']]
-# kw_list = [['tea', '-1'], ['Prime Minister', '1']]
-# kw_list = [['tea', '-1'], ['Prime Minister', '1']]
+# kw_list = [['tea', '-1']]
 
 # kw_list = new_list
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
@@ -74,7 +73,7 @@ print(combined_trend_data_df.head())
 # print(suggestions_dict)
 
 # Loading local stock data
-stock_data_df = pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/cse_data/CSE_market_indices_2017 - Sheet1.csv",sep=None, thousands=',')
+stock_data_df = pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/external/stock-data-plantations/kelani_valley_2013_to_2018.csv",sep=None, thousands=',')
 stock_data_df['date'] = pd.to_datetime(stock_data_df['date'], format="%Y/%m/%d")
 stock_data_df = stock_data_df.set_index('date')
 # stock_data_df['new_col'] = (stock_data_df['Services'].pct_change()*100).round(2)
@@ -87,11 +86,12 @@ result_df.reset_index(inplace=True)
 result_df.set_index('date', drop=False, inplace=True)
 result_df = remove_weekends(result_df)
 stock_trend_combined = result_df.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/trend_data/stock_trend_combined.csv",sep='\t', encoding='utf-8', index=False)
+'''
 formated_df = pd.read_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/interim/trend_data/stock_trend_combined.csv",sep='\t', encoding='utf-8')
 formated_df.columns = formated_df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
 formated_df = formated_df.dropna()
 formated_df['kw_max'] = formated_df['kw_max'].str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
-add_impact_from_changepoints('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/changepoints.csv', formated_df)
+add_impact_from_changepoints('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/effective_points.csv', formated_df)
 # add_impact(formated_df)
 print(formated_df)
 formated_df.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/trend_data/stock_trend_formated.csv",sep='\t', encoding='utf-8', index=False)
