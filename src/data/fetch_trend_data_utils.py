@@ -50,8 +50,22 @@ def add_impact(df):
 
 def add_impact_from_changepoints(file, stock_df):
     cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
+    cp_df.drop(columns='impact', inplace=True)
     print(cp_df)
+    cp_df['isImpacted'] = 1
+    result = pd.merge(stock_df, cp_df, on=['date'], how='left')
+    result['isImpacted'].fillna(0, inplace=True)
+    # result = stock_df.join(cp_df, on='date', how='outer')
+    # stock_df['isImpacted'] = 'NI'
+    # result = pd.concat([cp_df, stock_df], axis=1)
+    # result.reset_index(inplace=True)
+
+    result.to_csv(
+        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/newAll.csv',
+        sep='\t', encoding='utf-8', index=False)
+
     impacted_df = pd.merge(cp_df, stock_df, on='date', how='inner')
+
     impacted_df.to_csv(
         '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/impacted.csv',
         sep='\t', encoding='utf-8', index=False)
@@ -99,3 +113,15 @@ def write_json_data_to_file(file, json_data):
         json.dump(json_data, outfile)
     # with open(file, 'wb') as f:
     #     json.dump(json_data, codecs.getwriter('utf-8')(f), ensure_ascii=False)
+
+
+# calculate impact
+def calculate_impact(stock_df, dp):
+    series = stock_df['close']
+    # Tail-rolling average transform
+    rolling = series.rolling(window=4)
+    rolling_mean = rolling.mean()
+    stock_df['impact'] = round(((series - rolling_mean) / rolling_mean) * 100, dp)
+    stock_df.dropna(inplace=True)
+    return stock_df
+
