@@ -11,7 +11,7 @@ impact_df = pd.read_csv(
     , sep='\t', encoding='utf-8')
 print(impact_df)
 
-event_df = impact_df[['date', 'kw_max', 'max_value', 'plantations_1']]
+event_df = impact_df[['date', 'kw_max', 'max_value', 'close_1', 'impact']]
 event_df.set_index('kw_max', inplace=True)
 print(event_df)
 

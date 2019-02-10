@@ -61,7 +61,7 @@ def add_impact_from_changepoints(file, stock_df):
     # result.reset_index(inplace=True)
 
     result.to_csv(
-        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/newAll.csv',
+        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/final_combined_output.csv',
         sep='\t', encoding='utf-8', index=False)
 
     impacted_df = pd.merge(cp_df, stock_df, on='date', how='inner')
@@ -125,3 +125,16 @@ def calculate_impact(stock_df, dp):
     stock_df.dropna(inplace=True)
     return stock_df
 
+
+# rename duplicates
+def rename_duplicate_keys(df, suffix='_'):
+    appendents = (suffix + df.groupby(level=0).cumcount().astype(str).replace('0', '')).replace(suffix, '')
+    return df.set_index(df.index + appendents)
+
+
+def rename_duplicate_max_values(df):
+    df.set_index('kw_max', inplace=True)
+    new_df = rename_duplicate_keys(df)
+    new_df.reset_index(level=0, inplace=True)
+    new_df.rename(columns={'index': 'kw_max'}, inplace=True)
+    return new_df

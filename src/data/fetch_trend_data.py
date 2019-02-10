@@ -1,20 +1,24 @@
 import pandas as pd
 from pytrends.request import TrendReq
+
+from src.data.fetch_kw_from_csv_no_duplicates import kw_sent_list
+
+# from src.data.fetch_kw_from_csv import kw_sent_list
 # from src.data.fetch_kw_format2 import kw_sent_list
 # from data.external.kw_list import new_list
 from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints, \
-    split_sublist, create_news_vector, add_max_value, display_max_cols, calculate_impact
+    split_sublist, create_news_vector, add_max_value, display_max_cols, calculate_impact, rename_duplicate_max_values
 
 display_max_cols(30)
 
 pytrends = TrendReq(hl='en-US', tz=330)
 
-# kw_list = kw_sent_list
-# print(kw_sent_list)
+kw_list = kw_sent_list
+print(kw_sent_list)
 
 # kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
 # kw_list = [['Tea'], ['gsp+'], ['floods'], ['Prime Minister'], ['Ceylon Tea']]
-kw_list = [['tea', '-1']]
+# kw_list = [['tea', '-1'], ['floods', '-1']]
 
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend1 = TrendReq()
@@ -91,7 +95,9 @@ formated_df.columns = formated_df.columns.str.strip().str.lower().str.replace(' 
 formated_df = formated_df.dropna()
 formated_df['kw_max'] = formated_df['kw_max'].str.replace('(', '').str.replace(')', '').str.replace('\'', '').str.replace(',', '').str.replace('.', '_')
 calculate_impact(formated_df, 4)
+print(formated_df.head())
+# formated_df = rename_duplicate_max_values(formated_df)
 add_impact_from_changepoints('/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/effective_points.csv', formated_df)
 # add_impact(formated_df)
-print(formated_df)
+print(formated_df.head())
 formated_df.to_csv("/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/trend_data/stock_trend_formated.csv",sep='\t', encoding='utf-8', index=False)
