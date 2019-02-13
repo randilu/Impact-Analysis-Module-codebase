@@ -9,6 +9,8 @@ file = "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/ext
 events = pd.read_csv(file, sep=',', encoding='utf-8')
 events.dropna(inplace=True)
 events_df = events[['event', 'keyword_1', 'sentiment']]
+# with date
+# events_df = events[['date', 'event', 'keyword_1', 'sentiment']]
 
 events.set_index('keyword_1', inplace=True)
 events = rename_duplicate_keys(events)
@@ -25,6 +27,8 @@ print(events)
 events_df.reset_index(drop=True, inplace=True)
 print(events_df)
 df_of_kw_sent = events_df[['keyword_1', 'sentiment']]
+# with date
+# df_of_kw_sent = events_df[['date', 'keyword_1', 'sentiment']]
 print(df_of_kw_sent)
 df_of_kw_sent.reset_index(drop=True, inplace=True)
 kw_sent_list = []

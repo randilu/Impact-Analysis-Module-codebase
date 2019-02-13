@@ -51,7 +51,6 @@ def add_impact(df):
 def add_impact_from_changepoints(file, stock_df):
     cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
     cp_df.drop(columns='impact', inplace=True)
-    print(cp_df)
     cp_df['isImpacted'] = 1
     result = pd.merge(stock_df, cp_df, on=['date'], how='left')
     result['isImpacted'].fillna(0, inplace=True)
@@ -83,7 +82,7 @@ def display_max_cols(cols):
 
 
 def split_sublist(sublist):
-    return sublist[0], sublist[1]
+    return sublist[0], sublist[1], sublist[2]
 
 
 def create_news_vector(df):
@@ -138,3 +137,12 @@ def rename_duplicate_max_values(df):
     new_df.reset_index(level=0, inplace=True)
     new_df.rename(columns={'index': 'kw_max'}, inplace=True)
     return new_df
+
+
+def create_date_range(date, days_before, days_after):
+    date = pd.to_datetime(date)
+    start_date = date + pd.DateOffset(days=-days_before)
+    start_date = start_date.strftime('%Y-%m-%d')
+    end_date = date + pd.DateOffset(days=days_after)
+    end_date = end_date.strftime('%Y-%m-%d')
+    return start_date, end_date
