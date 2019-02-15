@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from pandas import DataFrame
 from sklearn import preprocessing
+import datetime
 
 
 def normalize_trends(frame, kw_list):
@@ -48,25 +49,40 @@ def add_impact(df):
     return
 
 
-def add_impact_from_changepoints(file, stock_df):
+def add_impact_from_changepoints(file, stock_df, map_duration):
     cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
     cp_df.drop(columns='impact', inplace=True)
     cp_df['isImpacted'] = 1
-    result = pd.merge(stock_df, cp_df, on=['date'], how='left')
+    print(cp_df['date'])
+    date_list = cp_df["date"].values
+    modified_date_list = []
+    for date in date_list:
+        history = populate_date_range(date, map_duration)
+        modified_date_list = list(set(modified_date_list + history))
+        # modified_date_list = modified_date_list+history
+    # modified_date_list.append(history)
+    modified_cp_df = pd.DataFrame({'date': modified_date_list})
+    modified_cp_df.sort_values(by=['date'], inplace=True)
+    print(modified_date_list)
+    print(modified_cp_df)
+    modified_cp_df = pd.merge(modified_cp_df, cp_df, on=['date'], how='left')
+    result = pd.merge(stock_df, modified_cp_df, on=['date'], how='left')
+    result = result[['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'impact', 'isImpacted']]
     result['isImpacted'].fillna(0, inplace=True)
-    # result = stock_df.join(cp_df, on='date', how='outer')
-    # stock_df['isImpacted'] = 'NI'
-    # result = pd.concat([cp_df, stock_df], axis=1)
-    # result.reset_index(inplace=True)
-
     result.to_csv(
         '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/final_combined_output.csv',
         sep='\t', encoding='utf-8', index=False)
-
+    #
+    # mapping the events with highest trend within a specified duration
+    #
+    mapped_df = map_events(result, map_duration)
+    print(mapped_df)
     impacted_df = pd.merge(cp_df, stock_df, on='date', how='inner')
-
     impacted_df.to_csv(
         '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/impacted.csv',
+        sep='\t', encoding='utf-8', index=False)
+    mapped_df.to_csv(
+        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/events_mapped.csv',
         sep='\t', encoding='utf-8', index=False)
 
 
@@ -146,3 +162,43 @@ def create_date_range(date, days_before, days_after):
     end_date = date + pd.DateOffset(days=days_after)
     end_date = end_date.strftime('%Y-%m-%d')
     return start_date, end_date
+
+
+def populate_date_range(date, duration):
+    date = pd.to_datetime(date)
+    timestamps = pd.bdate_range(end=date, periods=duration).tolist()
+    date_strings = [d.strftime('%Y-%m-%d') for d in timestamps]
+    return date_strings
+
+
+def map_events(df, duration):
+    # iterate through each tupple in the dataframe
+    new_df = pd.DataFrame(columns=['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'impact'])
+
+    for line, row in enumerate(df.itertuples(), 1):
+        if row.isImpacted == 1 and row.Index > duration:
+            #
+            # create a chunk of data frame from the whole data frame
+            #
+            temp_df = df.loc[row.Index - duration:row.Index]
+            #
+            # sorting the chunked data frame from max trend value
+            #
+            temp_df = temp_df.iloc[(-temp_df['max_value'].abs()).argsort()]
+            if row.impact > 0:
+                max_val = temp_df['max_value'].max()
+            else:
+                max_val = temp_df['max_value'].min()
+            key = temp_df['kw_max'].iloc[0]
+            daily_news_vec = temp_df['daily_news_vector_sum'].iloc[0]
+            new_df = new_df.append(
+                {'date': row.date, 'kw_max': key, 'max_value': max_val, 'daily_news_vector_sum': daily_news_vec,
+                 'impact': row.impact}, ignore_index=True)
+    return new_df
+
+# formated_df = pd.read_csv(
+#     "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/final_combined_output.csv",
+#     sep='\t', encoding='utf-8')
+# add_impact_from_changepoints(
+#     '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/effective_points.csv',
+#     formated_df, 7)

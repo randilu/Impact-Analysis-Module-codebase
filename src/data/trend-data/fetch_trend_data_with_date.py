@@ -1,9 +1,9 @@
 import pandas as pd
 from pytrends.request import TrendReq
 
-from src.data.fetch_kw_from_csv_no_duplicates import kw_sent_list
+# from src.data.fetch_kw_from_csv_no_duplicates import kw_sent_list
 
-# from src.data.fetch_kw_from_csv import kw_sent_list
+from src.data.fetch_kw_from_csv import kw_sent_list
 # from src.data.fetch_kw_format2 import kw_sent_list
 # from data.external.kw_list import new_list
 from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints, \
@@ -30,7 +30,7 @@ for i, sub_list in enumerate(kw_list, start=0):
     int_sentiment = int(sentiment)
     sub_list = [sub_list]
     print(sub_list)
-    start_date, end_date = create_date_range(date, 14, 14)
+    start_date, end_date = create_date_range(date, 21, 21)
     # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
     pytrend1.build_payload(sub_list, cat=0, timeframe=start_date + " " + end_date, geo='LK')
 
@@ -78,7 +78,10 @@ stock_data_df = pd.read_csv(
     sep=None, thousands=',')
 stock_data_df['date'] = pd.to_datetime(stock_data_df['date'], format="%Y/%m/%d")
 stock_data_df = stock_data_df.set_index('date')
+calculate_impact(stock_data_df, 4)
 stock_data_pct_change_df = (stock_data_df.pct_change() * 100).round(2)
+
+
 #
 # combining trend data and stock data
 #
@@ -108,12 +111,11 @@ formated_df['kw_max'] = formated_df['kw_max'].str.replace('(', '').str.replace('
                                                                                                     '').str.replace(',',
                                                                                                                     '').str.replace(
     '.', '_')
-calculate_impact(formated_df, 4)
 print(formated_df.head())
 # formated_df = rename_duplicate_max_values(formated_df)
 add_impact_from_changepoints(
     '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/effective_points.csv',
-    formated_df)
+    formated_df, 7)
 # add_impact(formated_df)
 print(formated_df.head())
 formated_df.to_csv(
