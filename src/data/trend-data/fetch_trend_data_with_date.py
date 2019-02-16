@@ -19,18 +19,18 @@ print(kw_sent_list)
 
 # kw_list = [['Storm', 'mahinda', 'Prime Minister', 'ranil', 'home'], ['Toyota']]
 # kw_list = [['Tea'], ['gsp+'], ['floods'], ['Prime Minister'], ['Ceylon Tea']]
-# kw_list = [['2017-12-15', 'tea', '-1'], ['2017-01-15', 'floods', '-1']]
+# kw_list = [[0, '2017-12-15', 'tea', '-1'], [1, '2017-01-15', 'floods', '-1']]
 
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend1 = TrendReq()
 # list which contains set of data frames each corresponding to a keyword
 joined_trend_dfs_list = []
 for i, sub_list in enumerate(kw_list, start=0):
-    date, sub_list, sentiment = split_sublist(sub_list)
+    event_no, date, sub_list, sentiment = split_sublist(sub_list)
     int_sentiment = int(sentiment)
     sub_list = [sub_list]
     print(sub_list)
-    start_date, end_date = create_date_range(date, 21, 21)
+    start_date, end_date = create_date_range(date, 14, 14)
     # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
     pytrend1.build_payload(sub_list, cat=0, timeframe=start_date + " " + end_date, geo='LK')
 
@@ -42,6 +42,7 @@ for i, sub_list in enumerate(kw_list, start=0):
     # print(interest_over_time_df2)
     rounded_df1 = normalize_trends(interest_over_time_df1, sub_list)
     rounded_df1 *= int_sentiment
+    rounded_df1 = rounded_df1.add_suffix('_' + str(event_no))
     frames = [rounded_df1]
     # joining the data frames and appending into above specified list
     joined_trend_dfs_list.append(pd.concat(frames))
@@ -74,13 +75,12 @@ print(combined_trend_data_df.head())
 
 # Loading local stock data
 stock_data_df = pd.read_csv(
-    "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/external/stock-data-plantations/kelani valley_17_18.csv",
+    "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/external/stock-data-plantations/kelani_valley_2013_to_2018.csv",
     sep=None, thousands=',')
 stock_data_df['date'] = pd.to_datetime(stock_data_df['date'], format="%Y/%m/%d")
 stock_data_df = stock_data_df.set_index('date')
 calculate_impact(stock_data_df, 4)
 stock_data_pct_change_df = (stock_data_df.pct_change() * 100).round(2)
-
 
 #
 # combining trend data and stock data

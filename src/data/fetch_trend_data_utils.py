@@ -50,10 +50,11 @@ def add_impact(df):
 
 
 def add_impact_from_changepoints(file, stock_df, map_duration):
+    print(stock_df)
     cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
     cp_df.drop(columns='impact', inplace=True)
     cp_df['isImpacted'] = 1
-    print(cp_df['date'])
+    # print(cp_df['date'])
     date_list = cp_df["date"].values
     modified_date_list = []
     for date in date_list:
@@ -63,11 +64,14 @@ def add_impact_from_changepoints(file, stock_df, map_duration):
     # modified_date_list.append(history)
     modified_cp_df = pd.DataFrame({'date': modified_date_list})
     modified_cp_df.sort_values(by=['date'], inplace=True)
-    print(modified_date_list)
-    print(modified_cp_df)
+    # print(modified_date_list)
     modified_cp_df = pd.merge(modified_cp_df, cp_df, on=['date'], how='left')
+    modified_cp_df['isImpacted'].fillna(0, inplace=True)
+    print(modified_cp_df)
+
     result = pd.merge(stock_df, modified_cp_df, on=['date'], how='left')
-    result = result[['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'impact', 'isImpacted']]
+    print(result)
+    result = result[['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'impact', 'isImpacted']]
     result['isImpacted'].fillna(0, inplace=True)
     result.to_csv(
         '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/final_combined_output.csv',
@@ -98,7 +102,7 @@ def display_max_cols(cols):
 
 
 def split_sublist(sublist):
-    return sublist[0], sublist[1], sublist[2]
+    return sublist[0], sublist[1], sublist[2], sublist[3]
 
 
 def create_news_vector(df):
@@ -136,6 +140,7 @@ def calculate_impact(stock_df, dp):
     # Tail-rolling average transform
     rolling = series.rolling(window=4)
     rolling_mean = rolling.mean()
+    stock_df['moving_avg'] = rolling_mean
     stock_df['impact'] = round(((series - rolling_mean) / rolling_mean) * 100, dp)
     stock_df.dropna(inplace=True)
     return stock_df
@@ -193,12 +198,5 @@ def map_events(df, duration):
             daily_news_vec = temp_df['daily_news_vector_sum'].iloc[0]
             new_df = new_df.append(
                 {'date': row.date, 'kw_max': key, 'max_value': max_val, 'daily_news_vector_sum': daily_news_vec,
-                 'impact': row.impact}, ignore_index=True)
+                 'close': row.close, 'impact': row.impact}, ignore_index=True)
     return new_df
-
-# formated_df = pd.read_csv(
-#     "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/final_combined_output.csv",
-#     sep='\t', encoding='utf-8')
-# add_impact_from_changepoints(
-#     '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/changepoints/effective_points.csv',
-#     formated_df, 7)
