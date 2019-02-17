@@ -2,10 +2,10 @@ import pandas as pd
 from pytrends.request import TrendReq
 
 # from src.data.fetch_kw_from_csv_no_duplicates import kw_sent_list
-
-from src.data.fetch_kw_from_csv import kw_sent_list
+# from src.data.fetch_kw_from_csv import kw_sent_list
 # from src.data.fetch_kw_format2 import kw_sent_list
 # from data.external.kw_list import new_list
+from src.data.event_data.fetch_kw_format_dup_from_json import kw_sent_list
 from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, add_impact, add_impact_from_changepoints, \
     split_sublist, create_news_vector, add_max_value, display_max_cols, calculate_impact, rename_duplicate_max_values, \
     create_date_range
