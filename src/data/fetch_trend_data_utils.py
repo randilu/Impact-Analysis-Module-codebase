@@ -74,19 +74,22 @@ def add_impact_from_changepoints(file, stock_df, map_duration):
     result = result[['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'impact', 'isImpacted']]
     result['isImpacted'].fillna(0, inplace=True)
     result.to_csv(
-        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/final_combined_output.csv',
+        '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/final_combined_output.csv',
         sep='\t', encoding='utf-8', index=False)
     #
     # mapping the events with highest trend within a specified duration
     #
     mapped_df = map_events(result, map_duration)
     print(mapped_df)
+    mapped_df.to_csv(
+        '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/events_mapped.csv',
+        sep='\t', encoding='utf-8', index=False)
+    #
+    # without modification to changepoint dates
+    #
     impacted_df = pd.merge(cp_df, stock_df, on='date', how='inner')
     impacted_df.to_csv(
-        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/impacted.csv',
-        sep='\t', encoding='utf-8', index=False)
-    mapped_df.to_csv(
-        '/home/randilu/fyp_impact analysis module/impact_analysis_module/data/processed/events_impacted/events_mapped.csv',
+        '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/impacted.csv',
         sep='\t', encoding='utf-8', index=False)
 
 
