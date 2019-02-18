@@ -5,8 +5,9 @@ import pandas as pd
 from pandas.io.json import json_normalize
 from src.data.fetch_trend_data_utils import display_max_cols, save_dictionary_to_csv
 
+company_name = 'kelani_valley'
 display_max_cols(10)
-jfile = "/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/eem/KelaniValleyPlantations.json"
+jfile = "/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/eem/KelaniValleyPlantations2.json"
 with open(jfile, 'r') as f:
     jdata = json.load(f)
 
@@ -33,7 +34,7 @@ events = events_df[['event_no', 'event', 'keyword_1']]
 # events.drop_duplicates(subset='keyword_1', keep="last", inplace=True)
 # events.reset_index(drop=True, inplace=True)
 events.to_csv(
-    '/home/randilu/fyp_integration/Impact-Analysis-Module/src/data/dictionaries/event_dictionary.csv',
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/src/data/dictionaries/' + company_name + '_event_dictionary.csv',
     sep=',', encoding='utf-8', index=False)
 print(events)
 

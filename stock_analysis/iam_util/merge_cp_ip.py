@@ -1,8 +1,9 @@
 import pandas as pd
 
-changepoints_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/changepoints.csv'
-impactpoints_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/impactpoints.csv'
-effective_points_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/changepoints/effective_points.csv'
+company_name = 'kelani_valley'
+changepoints_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/' + company_name + '_changepoints.csv'
+impactpoints_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/' + company_name + '_impactpoints.csv'
+effective_points_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/changepoints/' + company_name + '_effective_points.csv'
 
 # reading from csv
 cp_df = pd.read_csv(changepoints_file, sep='\t', encoding='utf-8', index_col='date', parse_dates=True)

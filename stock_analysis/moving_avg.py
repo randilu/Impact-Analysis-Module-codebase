@@ -7,7 +7,8 @@ plt.rcParams['figure.figsize'] = (20, 10)
 # plt.style.use('ggplot')
 plt.style.use('fivethirtyeight')
 
-file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-plantations/kelani_valley_2013_to_2018.csv'
+company_name = 'kelani_valley'
+file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
 stock_df = pd.read_csv(file, sep='\,', encoding='utf-8', index_col='date', parse_dates=True)
 # stock_df['date'] = pd.to_datetime(stock_df['date'], format="%Y/%m/%d")
 
@@ -41,9 +42,10 @@ print(impacts)
 cp_df = impacts[['date', 'impact']]
 print(cp_df)
 # cp_df = pd.DataFrame({'date': impacts['date', 'impact']})
-cp_df.to_csv('/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/impactpoints.csv',
-             sep='\t'
-             , encoding='utf-8', index=False)
+cp_df.to_csv(
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/' + company_name + '_impactpoints.csv',
+    sep='\t'
+    , encoding='utf-8', index=False)
 
 # Separate into negative and positive impactpoints
 impos_data = impacts[impacts['impact'] > 0]

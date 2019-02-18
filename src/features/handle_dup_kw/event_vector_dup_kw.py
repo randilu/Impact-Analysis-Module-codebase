@@ -1,13 +1,14 @@
 import csv
-
+import boto3
 import pandas as pd
-
+from io import StringIO
 from src.data.fetch_trend_data_utils import display_max_cols, create_json_from_df, write_json_data_to_file
 
+company_name = 'kelani_valley'
 display_max_cols(100)
 
 impact_df = pd.read_csv(
-    "/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/events_mapped.csv"
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/' + company_name + '_events_mapped.csv'
     , sep='\t', encoding='utf-8')
 print(impact_df)
 
@@ -19,7 +20,7 @@ event_df['event_no'] = event_df['event_no'].astype(int)
 print(event_df)
 
 event_dictionary_df = pd.read_csv(
-    '/home/randilu/fyp_integration/Impact-Analysis-Module/src/data/dictionaries/event_dictionary.csv',
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/src/data/dictionaries/' + company_name + '_event_dictionary.csv',
     sep=',', encoding='utf-8')
 
 print(event_dictionary_df)
@@ -31,5 +32,18 @@ combined_event_impact_df.drop(columns, inplace=True, axis=1)
 print(combined_event_impact_df)
 events_impact_json = create_json_from_df(combined_event_impact_df)
 write_json_data_to_file(
-    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/impact_events.json',
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + company_name + '_impact_events.json',
     events_impact_json)
+
+try:
+    session = boto3.Session(
+        aws_access_key_id='AKIAJC7S24JKRFDQAGVA',
+        aws_secret_access_key='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',
+    )
+    s3 = session.resource('s3')
+    s3.Object('finalyearprojectresources', 'impacts.json').put(Body=events_impact_json)
+    print('Uploaded')
+
+except BaseException as e:
+    print('Upload error')
+    print(str(e))

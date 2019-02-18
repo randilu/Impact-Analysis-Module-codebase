@@ -12,7 +12,8 @@ plt.rcParams['figure.figsize'] = (20, 10)
 plt.style.use('ggplot')
 
 # reading from csv
-file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-plantations/kelani_valley_2013_to_2018.csv'
+company_name = 'kelani_valley'
+file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
 stock_df = pd.read_csv(file, sep='\,', encoding='utf-8', index_col='date', parse_dates=True)
 calculate_impact(stock_df, 4)
 print(stock_df.head())
@@ -83,7 +84,8 @@ print(cp_with_impact)
 
 # cp_with_impact = calculate_impact(cp_with_close, 4)
 cp_with_impact.to_csv(
-    '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/changepoints.csv', sep='\t'
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/' + company_name + '_changepoints.csv',
+    sep='\t'
     , encoding='utf-8', index=False)
 
 # show deltas

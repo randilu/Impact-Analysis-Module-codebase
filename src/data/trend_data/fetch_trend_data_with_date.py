@@ -74,9 +74,9 @@ print(combined_trend_data_df.head())
 # print(suggestions_dict)
 
 # Loading local stock data
-stock_data_df = pd.read_csv(
-    "/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-plantations/kelani_valley_2013_to_2018.csv",
-    sep=None, thousands=',')
+company_name = 'kelani_valley'
+file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
+stock_data_df = pd.read_csv(file, sep=None, thousands=',')
 stock_data_df['date'] = pd.to_datetime(stock_data_df['date'], format="%Y/%m/%d")
 stock_data_df = stock_data_df.set_index('date')
 calculate_impact(stock_data_df, 4)
@@ -96,11 +96,11 @@ result_df.set_index('date', drop=False, inplace=True)
 result_df.sort_index(inplace=True)
 result_df = remove_weekends(result_df)
 stock_trend_combined = result_df.to_csv(
-    "/home/randilu/fyp_integration/Impact-Analysis-Module/data/interim/trend_data/stock_trend_combined.csv",
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/interim/trend_data/' + company_name + '_stock_trend_combined.csv',
     sep='\t', encoding='utf-8', index=False)
 
 formated_df = pd.read_csv(
-    "/home/randilu/fyp_integration/Impact-Analysis-Module/data/interim/trend_data/stock_trend_combined.csv",
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/interim/trend_data/' + company_name + '_stock_trend_combined.csv',
     sep='\t', encoding='utf-8')
 formated_df.columns = formated_df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(',
                                                                                                     '').str.replace(')',
@@ -114,10 +114,10 @@ formated_df['kw_max'] = formated_df['kw_max'].str.replace('(', '').str.replace('
 print(formated_df.head())
 # formated_df = rename_duplicate_max_values(formated_df)
 add_impact_from_changepoints(
-    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/changepoints/effective_points.csv',
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/changepoints/' + company_name + '_effective_points.csv',
     formated_df, 7)
 # add_impact(formated_df)
 print(formated_df.head())
 formated_df.to_csv(
-    "/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/trend_data/stock_trend_formated.csv",
+    '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/trend_data/' + company_name + '_stock_trend_formated.csv',
     sep='\t', encoding='utf-8', index=False)
