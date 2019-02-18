@@ -1,6 +1,7 @@
 import csv
 import boto3
 import pandas as pd
+from pprint import pprint
 from io import StringIO
 from src.data.fetch_trend_data_utils import display_max_cols, create_json_from_df, write_json_data_to_file
 
@@ -31,19 +32,20 @@ combined_event_impact_df.drop(columns, inplace=True, axis=1)
 
 print(combined_event_impact_df)
 events_impact_json = create_json_from_df(combined_event_impact_df)
+print(events_impact_json)
 write_json_data_to_file(
     '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + company_name + '_impact_events.json',
     events_impact_json)
 
-try:
-    session = boto3.Session(
-        aws_access_key_id='AKIAJC7S24JKRFDQAGVA',
-        aws_secret_access_key='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',
-    )
-    s3 = session.resource('s3')
-    s3.Object('finalyearprojectresources', 'impacts.json').put(Body=events_impact_json)
-    print('Uploaded')
-
-except BaseException as e:
-    print('Upload error')
-    print(str(e))
+# try:
+#     session = boto3.Session(
+#         aws_access_key_id='AKIAJC7S24JKRFDQAGVA',
+#         aws_secret_access_key='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',
+#     )
+#     s3 = session.resource('s3')
+#     s3.Object('finalyearprojectresources', 'impacts.json').put(Body=events_impact_json)
+#     print('Uploaded')
+#
+# except BaseException as e:
+#     print('Upload error')
+#     print(str(e))

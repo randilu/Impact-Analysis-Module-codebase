@@ -134,9 +134,12 @@ def create_json_from_df(df):
 
 def write_json_data_to_file(file, json_data):
     with open(file, 'w') as outfile:
-        json.dump(json_data, outfile)
-    # with open(file, 'wb') as f:
-    #     json.dump(json_data, codecs.getwriter('utf-8')(f), ensure_ascii=False)
+        json.dump(json_data, outfile, indent=4, sort_keys=True)
+
+
+def read_json_data_from_file(file):
+    with open(file) as f:
+        return json.load(f)
 
 
 # calculate impact
