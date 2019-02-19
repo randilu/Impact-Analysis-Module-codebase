@@ -187,24 +187,33 @@ def populate_date_range(date, duration):
 def map_events(df, duration):
     # iterate through each tupple in the dataframe
     new_df = pd.DataFrame(columns=['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'impact'])
-
+    print(new_df)
     for line, row in enumerate(df.itertuples(), 1):
         if row.isImpacted == 1 and row.Index > duration:
+            print(row.Index)
             #
             # create a chunk of data frame from the whole data frame
             #
             temp_df = df.loc[row.Index - duration:row.Index]
+            print(temp_df)
             #
             # sorting the chunked data frame from max trend value
             #
-            temp_df = temp_df.iloc[(-temp_df['max_value'].abs()).argsort()]
+            temp_df = temp_df.iloc[(-temp_df['max_value']).argsort()]
+            print(temp_df)
             if row.impact > 0:
                 max_val = temp_df['max_value'].max()
+                key = temp_df['kw_max'].iloc[0]
             else:
                 max_val = temp_df['max_value'].min()
-            key = temp_df['kw_max'].iloc[0]
+                key = temp_df['kw_max'].iloc[-1]
+
             daily_news_vec = temp_df['daily_news_vector_sum'].iloc[0]
             new_df = new_df.append(
                 {'date': row.date, 'kw_max': key, 'max_value': max_val, 'daily_news_vector_sum': daily_news_vec,
                  'close': row.close, 'impact': row.impact}, ignore_index=True)
     return new_df
+
+# file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/kelani_valley_final_combined_output.csv'
+# df = pd.read_csv(file, index_col=False, sep=',', encoding='utf-8')
+# print(map_events(df,7))

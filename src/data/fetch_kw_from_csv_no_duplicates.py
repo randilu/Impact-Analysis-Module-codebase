@@ -5,7 +5,7 @@ import pandas as pd
 from src.data.fetch_trend_data_utils import display_max_cols, save_dictionary_to_csv, rename_duplicate_keys
 
 display_max_cols(10)
-file = "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/external/events/events_of_plantation_industry_v1 - kelani_valley_events.csv"
+file = "/home/randilu/fyp_impact analysis module/impact_analysis_module/data/external/events/kelani_valley_events.csv"
 events = pd.read_csv(file, sep=',', encoding='utf-8')
 events.dropna(inplace=True)
 events.drop_duplicates(subset='keyword_1', keep="last", inplace=True)
