@@ -26,26 +26,34 @@ pytrend1 = TrendReq()
 # list which contains set of data frames each corresponding to a keyword
 joined_trend_dfs_list = []
 for i, sub_list in enumerate(kw_list, start=0):
-    event_no, date, sub_list, sentiment = split_sublist(sub_list)
+    event_no, date, kw_sub_list, sentiment = split_sublist(sub_list)
     int_sentiment = int(sentiment)
-    sub_list = [sub_list]
-    print(sub_list)
-    start_date, end_date = create_date_range(date, 14, 14)
-    # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
-    pytrend1.build_payload(sub_list, cat=0, timeframe=start_date + " " + end_date, geo='LK')
+    start_date, end_date = create_date_range(date, 21, 14)
+    interest_over_time_df1 = pd.DataFrame()
+    print(kw_sub_list)
+    for item in kw_sub_list:
+        item = [item]
+        print(item)
+        # sub_list = [sub_list]
+        # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
+        pytrend1.build_payload(item, cat=0, timeframe=start_date + " " + end_date, geo='LK')
 
-    # Interest Over Time
-    interest_over_time_df1 = pytrend1.interest_over_time()
-    if interest_over_time_df1.empty:
-        continue
+        # Interest Over Time
+        interest_over_time_df1 = pytrend1.interest_over_time()
+        if interest_over_time_df1.empty:
+            continue
+        rounded_df1 = normalize_trends(interest_over_time_df1, item)
+        rounded_df1 *= int_sentiment
+        rounded_df1 = rounded_df1.add_suffix('_' + str(event_no))
+        frames = [rounded_df1]
+        # joining the data frames and appending into above specified list
+        joined_trend_dfs_list.append(pd.concat(frames))
+        break
     # print(interest_over_time_df1)
     # print(interest_over_time_df2)
-    rounded_df1 = normalize_trends(interest_over_time_df1, sub_list)
-    rounded_df1 *= int_sentiment
-    rounded_df1 = rounded_df1.add_suffix('_' + str(event_no))
-    frames = [rounded_df1]
-    # joining the data frames and appending into above specified list
-    joined_trend_dfs_list.append(pd.concat(frames))
+    # interest_over_time_df1 = pytrend1.interest_over_time()
+    # if interest_over_time_df1.empty:
+    #     continue
 
 # concatenating all the data frames to single data frame
 combined_trend_data_df = pd.concat(joined_trend_dfs_list, axis=1, sort=False)

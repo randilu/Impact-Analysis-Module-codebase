@@ -18,9 +18,10 @@ events_df['date'] = events_df['date'].dt.date
 print(events_df)
 events_df.columns = events_df.columns.map(lambda x: x.split(".")[-1])
 
-for i, row in events_df.iterrows():
-    list = events_df['keywords'][i]
-    events_df['keywords'][i] = list[0]
+print(events_df)
+# for i, row in events_df.iterrows():
+#     list = events_df['keywords'][i]
+#     events_df['keywords'][i] = list[0]
 
 # events_df.drop(columns='keywords', inplace=True)
 events_df.rename(columns={'content': 'event'}, inplace=True)
@@ -40,7 +41,7 @@ print(events)
 
 df_of_kw_sent = events_df[['event_no', 'date', 'keyword_1', 'sentiment']]
 print(df_of_kw_sent)
-df_of_kw_sent['sentiment'] = df_of_kw_sent['sentiment'].apply(lambda x: 1 if x > 0 else -1 if x == 0 else 0)
+df_of_kw_sent['sentiment'] = df_of_kw_sent['sentiment'].apply(lambda x: 1 if x > 0 else -1 if x < 0 else 0)
 print(df_of_kw_sent)
 df_of_kw_sent = df_of_kw_sent[df_of_kw_sent.sentiment != 0.0]
 df_of_kw_sent.reset_index(drop=True, inplace=True)

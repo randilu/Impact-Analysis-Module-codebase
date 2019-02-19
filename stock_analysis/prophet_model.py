@@ -75,6 +75,7 @@ cp_with_impact = pd.concat([cp_df, stock_df], axis=1, join_axes=[cp_df['date']])
 cp_with_impact.drop('date', axis=1, inplace=True)
 cp_with_impact.reset_index(level=0, inplace=True)
 cp_with_impact = cp_with_impact[['date', 'impact']]
+cp_with_impact = cp_with_impact[cp_with_impact.impact != 0]
 # pd.to_numeric(cp_with_close['close'])
 print(cp_with_impact)
 
