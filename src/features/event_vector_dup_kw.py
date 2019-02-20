@@ -12,7 +12,7 @@ def create_event_vector(company_name):
         , sep='\t', encoding='utf-8')
     print(impact_df)
 
-    event_df = impact_df[['date', 'kw_max', 'max_value', 'close', 'impact']]
+    event_df = impact_df[['date', 'kw_max', 'max_value', 'close', 'impact', 'daily_news_vector_sum']]
     event_df['kw_max'], event_df['event_no'] = event_df['kw_max'].str.split('_', 1).str
     event_df['event_no'].dropna(inplace=True)
     event_df['event_no'] = event_df['event_no'].astype(int)
@@ -30,6 +30,8 @@ def create_event_vector(company_name):
     combined_event_impact_df.drop(columns, inplace=True, axis=1)
 
     print(combined_event_impact_df)
+    combined_event_impact_df.to_csv(
+        '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + company_name + '_impact_events.csv')
     events_impact_json = create_json_from_df(combined_event_impact_df)
     print(events_impact_json)
     write_json_data_to_file(
@@ -48,5 +50,9 @@ def create_event_vector(company_name):
 # except BaseException as e:
 #     print('Upload error')
 #     print(str(e))
+
+#
+# run manually
+#
 
 create_event_vector(company_name)

@@ -3,7 +3,7 @@ import boto3
 from botocore.handlers import disable_signing
 from src.data.fetch_trend_data_utils import read_json_data_from_file
 
-ACCESS_ID = ' AKIAIR6DQWSOVXCJAXPA'
+ACCESS_ID = 'AKIAIR6DQWSOVXCJAXPA'
 ACCESS_KEY = 't5EMmjUapCKo/Ta2S1QUmCQWEsY3HOQwXCqL7+Hy'
 
 

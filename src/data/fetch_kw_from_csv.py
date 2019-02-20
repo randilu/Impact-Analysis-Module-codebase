@@ -3,8 +3,8 @@ import pandas as pd
 from src.data.fetch_trend_data_utils import display_max_cols
 
 display_max_cols(10)
-company_name = 'kelani_valley'
-events_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/' + company_name + '_events.csv'
+# company_name = 'kelani_valley'
+# events_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/' + company_name + '_events.csv'
 
 
 def get_events_from_csv(company_name, events_csv_file):

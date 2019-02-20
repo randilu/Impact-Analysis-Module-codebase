@@ -16,7 +16,7 @@ stock_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/exte
 #
 # manual input
 #
-events_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/' + company_name + '_events.csv'
+events_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/events_of_kv_plus_plantations.csv'
 
 input_s3_bucket_name = 'fypiamawsbucket'
 input_object_name = 'KelaniValleyPlantations.json'
@@ -29,39 +29,39 @@ source_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/process
 
 def main():
     global event_list
-    # try:
-    #     download_object_from_s3(input_s3_bucket_name, input_object_name, destination_to_save_input_file)
-    # except BaseException as e:
-    #     print("Error while downloading from S3", e)
-    #
-    # try:
-    #     extract_changepoints_from_prophet(company_name, stock_csv_file)
-    # except BaseException as e:
-    #     print("Error while extracting changepoints from prophet", e)
-    #
-    # try:
-    #     model_impacts_for_stock_data(company_name, stock_csv_file)
-    # except BaseException as e:
-    #     print("Error while modeling impacts", e)
-    #
-    # try:
-    #     create_combined_effective_points(company_name)
-    # except BaseException as e:
-    #     print("Error while creating effective points", e)
-
-    # try:
-    #     event_list = get_events_from_json(company_name, jfile)
-    # except BaseException as e:
-    #     print("Error while fetching events from json", e)
-
-    #
-    # manual input
-    #
+    try:
+        download_object_from_s3(input_s3_bucket_name, input_object_name, destination_to_save_input_file)
+    except BaseException as e:
+        print("Error while downloading from S3", e)
 
     try:
-        event_list = get_events_from_csv(company_name, events_csv_file)
+        extract_changepoints_from_prophet(company_name, stock_csv_file)
     except BaseException as e:
-        print("Error while fetching events from csv", e)
+        print("Error while extracting changepoints from prophet", e)
+
+    try:
+        model_impacts_for_stock_data(company_name, stock_csv_file)
+    except BaseException as e:
+        print("Error while modeling impacts", e)
+
+    try:
+        create_combined_effective_points(company_name)
+    except BaseException as e:
+        print("Error while creating effective points", e)
+
+    try:
+        event_list = get_events_from_json(company_name, jfile)
+    except BaseException as e:
+        print("Error while fetching events from json", e)
+
+    # #
+    # # manual input
+    # #
+    #
+    # try:
+    #     event_list = get_events_from_csv(company_name, events_csv_file)
+    # except BaseException as e:
+    #     print("Error while fetching events from csv", e)
 
     try:
         fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file)
