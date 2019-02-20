@@ -10,11 +10,6 @@ display_max_cols(10)
 jfile = "/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/eem/KelaniValleyPlantations2.json"
 
 
-# with open(jfile, 'r') as f:
-#     jdata = json.load(f)
-# def read_json_data_from_file(file):
-#     with open(file) as f:
-#         return json.load(f)
 def get_events_from_json(company_name, jfile):
     events = read_json_data_from_file(jfile)
     events_df = json_normalize(events)
@@ -58,7 +53,7 @@ def get_events_from_json(company_name, jfile):
     print(kw_sent_list)
     return kw_sent_list
 
-#
-# run manually
-#
+# #
+# # run manually
+# #
 # get_events_from_json(company_name, jfile)

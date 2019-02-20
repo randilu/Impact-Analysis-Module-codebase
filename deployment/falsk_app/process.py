@@ -27,7 +27,7 @@ output_object_name = 'kelani_valley_impact_events.json'
 source_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + output_object_name
 
 
-def main():
+def generate_impact_main():
     try:
         global event_list
         # try:
@@ -50,19 +50,19 @@ def main():
         except BaseException as e:
             print("Error while creating effective points", e)
 
-        # try:
-        #     event_list = get_events_from_json(company_name, jfile)
-        # except BaseException as e:
-        #     print("Error while fetching events from json", e)
-
-        #
-        # manual input
-        #
-
         try:
-            event_list = get_events_from_csv(company_name, events_csv_file)
+            event_list = get_events_from_json(company_name, jfile)
         except BaseException as e:
-            print("Error while fetching events from csv", e)
+            print("Error while fetching events from json", e)
+
+        # #
+        # # manual input
+        # #
+        #
+        # try:
+        #     event_list = get_events_from_csv(company_name, events_csv_file)
+        # except BaseException as e:
+        #     print("Error while fetching events from csv", e)
 
         try:
             fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file)
@@ -83,5 +83,3 @@ def main():
         return error
 
 
-if __name__ == '__main__':
-    main()
