@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 # company_name = 'kelani_valley'
 
 def create_combined_effective_points(company_name):
@@ -16,9 +17,15 @@ def create_combined_effective_points(company_name):
     frames = [ip_df, cp_df]
 
     effective_dates = cp_df.append(ip_df)
+    effective_dates.drop_duplicates(keep=False, inplace=True)
     effective_dates.dropna(inplace=True)
     effective_dates.sort_index(inplace=True, ascending=False)
     print(effective_dates)
 
     effective_dates.to_csv(effective_points_file, sep='\t', encoding='utf-8')
     effective_dates.to_csv()
+
+#
+# run manually
+#
+# create_combined_effective_points('company_history')

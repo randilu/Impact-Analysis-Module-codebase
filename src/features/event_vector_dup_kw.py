@@ -2,8 +2,8 @@ import pandas as pd
 
 from src.data.fetch_trend_data_utils import display_max_cols, create_json_from_df, write_json_data_to_file
 
-company_name = 'kelani_valley'
-display_max_cols(100)
+# company_name = 'kelani_valley'
+# display_max_cols(100)
 
 
 def create_event_vector(company_name):

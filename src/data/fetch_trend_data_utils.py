@@ -7,8 +7,6 @@ from pandas import DataFrame
 from sklearn import preprocessing
 import datetime
 
-company_name = 'kelani_valley'
-
 
 def normalize_trends(frame, kw_list):
     min_max_scaler = preprocessing.MinMaxScaler()
@@ -51,7 +49,7 @@ def add_impact(df):
     return
 
 
-def add_impact_from_changepoints(file, stock_df, map_duration):
+def add_impact_from_changepoints(company_name, file, stock_df, map_duration):
     print(stock_df)
     cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
     cp_df.drop(columns='impact', inplace=True)
@@ -213,6 +211,12 @@ def map_events(df, duration):
                 {'date': row.date, 'kw_max': key, 'max_value': max_val, 'daily_news_vector_sum': daily_news_vec,
                  'close': row.close, 'impact': row.impact}, ignore_index=True)
     return new_df
+
+
+def preprocess_stock_data(file):
+    stock_data = pd.read_csv(file)
+    stock_data.columns = [x.lower() for x in stock_data.columns]
+    stock_data.to_csv(file, index=False)
 
 # file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/kelani_valley_final_combined_output.csv'
 # df = pd.read_csv(file, index_col=False, sep=',', encoding='utf-8')

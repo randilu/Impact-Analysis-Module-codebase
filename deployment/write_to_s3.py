@@ -1,16 +1,16 @@
 import boto3
+from src.constants.constants import *
 
 from botocore.handlers import disable_signing
 from src.data.fetch_trend_data_utils import read_json_data_from_file
 
-ACCESS_ID = 'AKIAIR6DQWSOVXCJAXPA'
-ACCESS_KEY = 't5EMmjUapCKo/Ta2S1QUmCQWEsY3HOQwXCqL7+Hy'
+ACCESS_ID = USER1_ACCESS_ID
+ACCESS_KEY = USER1_ACCESS_KEY
 
 
 # s3_bucket_name = 'fypiamawsbucket'
 # object_name = 'kelani_valley_impact_events.json'
 # source_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + object_name
-
 
 def upload_output_to_s3(s3_bucket_name, object_name, source_file):
     try:
@@ -34,4 +34,3 @@ def upload_output_to_s3(s3_bucket_name, object_name, source_file):
     except BaseException as e:
         print('Uploaded error!')
         print(str(e))
-

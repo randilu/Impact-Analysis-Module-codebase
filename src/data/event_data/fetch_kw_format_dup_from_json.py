@@ -5,9 +5,9 @@ import pandas as pd
 from pandas.io.json import json_normalize
 from src.data.fetch_trend_data_utils import display_max_cols, save_dictionary_to_csv, read_json_data_from_file
 
-company_name = 'kelani_valley'
-display_max_cols(10)
-jfile = "/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/eem/KelaniValleyPlantations2.json"
+# company_name = 'kelani_valley'
+# display_max_cols(10)
+# jfile = "/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/eem/KelaniValleyPlantations2.json"
 
 
 def get_events_from_json(company_name, jfile):

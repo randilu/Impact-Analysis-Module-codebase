@@ -1,8 +1,13 @@
 import flask
-from flask import request, Response
-
+from flask import request
 from deployment.falsk_app.api_handler import generate_results_api_handler
+from deployment.falsk_app.api_utils import custom_response, start_runner
+from deployment.notifications import alert_for_sqs_notifications
 from src.features.event_vector_dup_kw import create_event_vector
+
+import requests
+import threading
+import time
 
 app = flask.Flask(__name__)
 # to get more specialized error messages
@@ -36,15 +41,21 @@ def generate_results():
     return custom_response(resp, 201)
 
 
-def custom_response(res, status_code):
-    """
-    Custom Response Function
-    """
-    return Response(
-        mimetype="application/json",
-        response=res,
-        status=status_code
-    )
+# @app.before_first_request
+def activate_job():
+    def run_job():
+        print("Searching for SQS notifications...")
+        alert_for_sqs_notifications()
+            # time.sleep(2)
+    run_job()
+
+    # thread = threading.Thread(target=run_job)activate_job()
+    # thread.start()
 
 
-app.run()
+if __name__ == "__main__":
+    # activate_job()
+    # app.run()
+    activate_job()
+    # activate_job()
+

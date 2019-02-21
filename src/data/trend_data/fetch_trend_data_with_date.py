@@ -10,13 +10,13 @@ from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, a
     split_sublist, create_news_vector, add_max_value, display_max_cols, calculate_impact, rename_duplicate_max_values, \
     create_date_range
 
-company_name = 'kelani_valley'
-stock_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
-display_max_cols(30)
+# company_name = 'kelani_valley'
+# stock_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
+# display_max_cols(30)
 
 
 def fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file):
-    pytrends = TrendReq(hl='en-US', tz=330)
+    # pytrends = TrendReq(hl='en-US', tz=330)
 
     # kw_list = [[0, '2017-12-15', 'tea', '-1'], [1, '2017-01-15', 'floods', '-1']]
     kw_list = event_list
@@ -121,9 +121,9 @@ def fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file):
         '.', '_')
     print(formated_df.head())
     # formated_df = rename_duplicate_max_values(formated_df)
-    add_impact_from_changepoints(
-        '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/changepoints/' + company_name + '_effective_points.csv',
-        formated_df, 7)
+    add_impact_from_changepoints(company_name,
+                                 '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/changepoints/' + company_name + '_effective_points.csv',
+                                 formated_df, 7)
     # add_impact(formated_df)
     print(formated_df.head())
     formated_df.to_csv(
