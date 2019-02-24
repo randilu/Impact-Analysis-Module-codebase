@@ -9,6 +9,7 @@ STOCK_CSV = BASE_PATH + '/data/external/stock-data-companies/' + COMPANY_NAME + 
 #
 # TODO
 INPUT_EVENTS_CSV = BASE_PATH + '/data/external/events/csv_files/events_of_kv_plus_plantations.csv'
+IMPACT_EVENTS_CSV = BASE_PATH + '/data/processed/final_output/' + COMPANY_NAME + '_impact_events.csv'
 
 INPUT_BUCKET = 'fypiamawsbucket'
 INPUT_EVENTS_JSON_NAME = 'KelaniValleyPlantations.json'

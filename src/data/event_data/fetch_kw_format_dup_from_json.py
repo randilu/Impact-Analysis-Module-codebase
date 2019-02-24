@@ -13,7 +13,8 @@ from src.data.fetch_trend_data_utils import display_max_cols, save_dictionary_to
 def get_events_from_json(company_name, jfile):
     events = read_json_data_from_file(jfile)
     events_df = json_normalize(events)
-    events_df['date'] = pd.to_datetime(events_df['date'], format="%d/%m/%Y")
+    # events_df['date'] = pd.to_datetime(events_df['date'], format="%d/%m/%Y")
+    events_df['date'] = pd.to_datetime(events_df['date'], format="%Y/%m/%d")
     events_df['date'] = events_df['date'].dt.date
     print(events_df)
     events_df.columns = events_df.columns.map(lambda x: x.split(".")[-1])

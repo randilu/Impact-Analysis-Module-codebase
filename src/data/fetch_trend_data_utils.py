@@ -71,7 +71,9 @@ def add_impact_from_changepoints(company_name, file, stock_df, map_duration):
 
     result = pd.merge(stock_df, modified_cp_df, on=['date'], how='left')
     print(result)
-    result = result[['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'impact', 'isImpacted']]
+    result = result[
+        ['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'open', 'high', 'low', 'trades', 'shares',
+         'impact', 'isImpacted']]
     result['isImpacted'].fillna(0, inplace=True)
     result.to_csv(
         '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/' + company_name + '_final_combined_output.csv',
@@ -184,7 +186,9 @@ def populate_date_range(date, duration):
 
 def map_events(df, duration):
     # iterate through each tupple in the dataframe
-    new_df = pd.DataFrame(columns=['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'impact'])
+    new_df = pd.DataFrame(
+        columns=['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'open', 'high', 'low', 'trades',
+                 'shares', 'impact'])
     print(new_df)
     for line, row in enumerate(df.itertuples(), 1):
         if row.isImpacted == 1 and row.Index > duration:
@@ -209,7 +213,8 @@ def map_events(df, duration):
             daily_news_vec = temp_df['daily_news_vector_sum'].iloc[0]
             new_df = new_df.append(
                 {'date': row.date, 'kw_max': key, 'max_value': max_val, 'daily_news_vector_sum': daily_news_vec,
-                 'close': row.close, 'impact': row.impact}, ignore_index=True)
+                 'close': row.close, 'open': row.open, 'high': row.high, 'low': row.low, 'trades': row.trades,
+                 'shares': row.shares, 'impact': row.impact}, ignore_index=True)
     return new_df
 
 

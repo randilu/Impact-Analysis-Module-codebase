@@ -27,7 +27,7 @@ def fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file):
     for i, sub_list in enumerate(kw_list, start=0):
         event_no, date, kw_sub_list, sentiment = split_sublist(sub_list)
         int_sentiment = int(sentiment)
-        start_date, end_date = create_date_range(date, 21, 7)
+        start_date, end_date = create_date_range(date, 14, 7)
         interest_over_time_df1 = pd.DataFrame()
         print(kw_sub_list)
         for item in kw_sub_list:

@@ -7,8 +7,8 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
 from stock_analysis.iam_util.iam_utils import calculate_impact
 
-company_name = 'kelani_valley'
-file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
+# company_name = 'kelani_valley'
+# file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
 
 
 def extract_changepoints_from_prophet(company_name, stock_csv_file):
@@ -150,3 +150,12 @@ def extract_changepoints_from_prophet(company_name, stock_csv_file):
     plt.ylabel('Price (Rs)')
     plt.title('Stock Price with Changepoints')
     plt.show()
+
+    # performance metrics
+    metric_df = forecast.set_index('ds')[['yhat_scaled']].join(df.set_index('ds').y_orig).reset_index()
+    print(metric_df.tail())
+    metric_df.dropna(inplace=True)
+    print(metric_df.tail())
+    print('r2_score : ', r2_score(metric_df.y_orig, metric_df.yhat_scaled))
+    print('mean_squared_error : ', mean_squared_error(metric_df.y_orig, metric_df.yhat_scaled))
+    print('mean_absolute_error : ', mean_absolute_error(metric_df.y_orig, metric_df.yhat_scaled))
