@@ -35,8 +35,11 @@ def create_event_vector(company_name):
             '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + company_name + '_impact_events.csv')
         events_impact_json = create_json_from_df(combined_event_impact_df)
         print(events_impact_json)
+        # write_json_data_to_file(
+        #     '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + company_name + '_impact_events.json',
+        #     events_impact_json)
         write_json_data_to_file(
-            '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/' + company_name + '_impact_events.json',
+            '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/impacts.json',
             events_impact_json)
         return events_impact_json
 

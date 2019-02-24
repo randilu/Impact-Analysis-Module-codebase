@@ -16,7 +16,7 @@ def evaluate_news_analysis(company_name, impact_events_csv):
     # fields = ['max_value', 'impact', 'daily_news_vector_sum']
     stock_trend_df = pd.read_csv(impact_events_csv, sep=',', usecols=fields)
     print(stock_trend_df)
-    # stock_trend_df.rename(columns={'isImpacted': 'impact_score'}, inplace=True)
+    stock_trend_df.rename(columns={'max_value': 'max_trend'}, inplace=True)
     stock_trend_df.head()
     stock_trend_df.info()
     stock_trend_df.describe()
@@ -26,7 +26,7 @@ def evaluate_news_analysis(company_name, impact_events_csv):
     sns.distplot(stock_trend_df['daily_news_vector_sum'])
     plt.show()
 
-    sns.distplot(stock_trend_df['max_value'])
+    sns.distplot(stock_trend_df['max_trend'])
     plt.show()
 
     ax = sns.heatmap(stock_trend_df.corr(), cmap="YlGnBu")
@@ -37,7 +37,7 @@ def evaluate_news_analysis(company_name, impact_events_csv):
         '/home/randilu/fyp_integration/Impact-Analysis-Module/evaluations/news_analysis_' + company_name + '_corr.csv')
     print(corr)
 
-    X = stock_trend_df[['max_value', 'daily_news_vector_sum', 'close']]
+    X = stock_trend_df[['max_trend', 'daily_news_vector_sum', 'close']]
     y = stock_trend_df['impact']
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=101)
@@ -53,7 +53,7 @@ def evaluate_news_analysis(company_name, impact_events_csv):
     # plt.show()
 
 
-# run manually
-company = 'agalawatte'
-impact_events_csv = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/agalawatte_impact_events.csv'
-evaluate_news_analysis(company, impact_events_csv)
+# # run manually
+# company = 'kelani_valley'
+# impact_events_csv = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/final_output/kelani_valley_impact_events.csv'
+# evaluate_news_analysis(company, impact_events_csv)

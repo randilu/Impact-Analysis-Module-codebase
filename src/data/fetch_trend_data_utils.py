@@ -6,9 +6,12 @@ import numpy as np
 from pandas import DataFrame
 from sklearn import preprocessing
 import datetime
+from sklearn.exceptions import DataConversionWarning
+import warnings
 
 
 def normalize_trends(frame, kw_list):
+    warnings.filterwarnings(action='ignore', category=DataConversionWarning)
     min_max_scaler = preprocessing.MinMaxScaler()
     x_scaled = min_max_scaler.fit_transform(frame.get(kw_list))
     df = DataFrame(x_scaled)
@@ -192,17 +195,17 @@ def map_events(df, duration):
     print(new_df)
     for line, row in enumerate(df.itertuples(), 1):
         if row.isImpacted == 1 and row.Index > duration:
-            print(row.Index)
+            # print(row.Index)
             #
             # create a chunk of data frame from the whole data frame
             #
             temp_df = df.loc[row.Index - duration:row.Index]
-            print(temp_df)
+            # print(temp_df)
             #
             # sorting the chunked data frame from max trend value
             #
             temp_df = temp_df.iloc[(-temp_df['max_value']).argsort()]
-            print(temp_df)
+            # print(temp_df)
             if row.impact > 0:
                 max_val = temp_df['max_value'].max()
                 key = temp_df['kw_max'].iloc[0]

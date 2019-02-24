@@ -4,8 +4,8 @@ from src.constants.constants import *
 from botocore.handlers import disable_signing
 from src.data.fetch_trend_data_utils import read_json_data_from_file
 
-ACCESS_ID = USER1_ACCESS_ID
-ACCESS_KEY = USER1_ACCESS_KEY
+ACCESS_ID = USER2_ACCESS_ID
+ACCESS_KEY = USER2_ACCESS_KEY
 
 
 # s3_bucket_name = 'fypiamawsbucket'

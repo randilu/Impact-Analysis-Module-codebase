@@ -1,4 +1,4 @@
-from deployment.read_from_s3 import download_object_from_s3
+from deployment.read_from_s3 import download_object_from_s3, download_csv_object_from_s3
 from deployment.write_to_s3 import upload_output_to_s3
 from src.constants.constants import *
 
@@ -77,7 +77,7 @@ def generate_impact_main(company_name, stock_csv_file, jfile):
 def trigger_main_process():
     try:
         download_object_from_s3(INPUT_BUCKET, INPUT_EVENTS_JSON_NAME, DESTINATION_TO_SAVE_INPUT_JSON)
-        # download_object_from_s3(INPUT_BUCKET, input_stock_file_name, destination_to_save_input_stock_file)
+        download_csv_object_from_s3(STOCK_DATA_BUCKET, STOCK_DATA_OBJECT_NAME, DESTINATION_TO_SAVE_CSV)
         # preprocess_stock_data(STOCK_CSV)
     except BaseException as e:
         print("Error while downloading from S3", e)

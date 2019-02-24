@@ -14,7 +14,6 @@ from src.data.fetch_trend_data_utils import normalize_trends, remove_weekends, a
 # stock_csv_file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/' + company_name + '.csv'
 # display_max_cols(30)
 
-
 def fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file):
     # pytrends = TrendReq(hl='en-US', tz=330)
 
@@ -29,6 +28,7 @@ def fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file):
         int_sentiment = int(sentiment)
         start_date, end_date = create_date_range(date, 14, 7)
         interest_over_time_df1 = pd.DataFrame()
+        print("\nFetching Trends for: \n")
         print(kw_sub_list)
         for item in kw_sub_list:
             item = [item]

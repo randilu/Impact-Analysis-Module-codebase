@@ -35,3 +35,24 @@ def download_object_from_s3(s3_bucket_name, object_name, destination_to_save):
     except BaseException as e:
         print('Download error')
         print(str(e))
+
+
+def download_csv_object_from_s3(s3_bucket_name, object_name, destination_to_save):
+    try:
+        s3 = boto3.resource('s3')
+        #
+        # for public buckets
+        #
+        s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
+        #
+        # authentication for bucket if required
+        #
+
+        # s3 = boto3.resource('s3', aws_access_key_id=ACCESS_ID, aws_secret_access_key=ACCESS_KEY)
+
+        content_object = s3.Object(s3_bucket_name, object_name)
+        content_object.download_file(destination_to_save)
+
+    except BaseException as e:
+        print('Download error')
+        print(str(e))

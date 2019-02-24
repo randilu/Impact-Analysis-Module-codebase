@@ -56,14 +56,14 @@ def extract_changepoints_from_prophet(company_name, stock_csv_file):
     viz_df[['y_orig', 'yhat_scaled']].plot()
     plt.show()
 
-    # performance metrics
-    metric_df = forecast.set_index('ds')[['yhat_scaled']].join(df.set_index('ds').y_orig).reset_index()
-    print(metric_df.tail())
-    metric_df.dropna(inplace=True)
-    print(metric_df.tail())
-    print('r2_score : ', r2_score(metric_df.y_orig, metric_df.yhat_scaled))
-    print('mean_squared_error : ', mean_squared_error(metric_df.y_orig, metric_df.yhat_scaled))
-    print('mean_absolute_error : ', mean_absolute_error(metric_df.y_orig, metric_df.yhat_scaled))
+    # # performance metrics
+    # metric_df = forecast.set_index('ds')[['yhat_scaled']].join(df.set_index('ds').y_orig).reset_index()
+    # print(metric_df.tail())
+    # metric_df.dropna(inplace=True)
+    # print(metric_df.tail())
+    # print('r2_score : ', r2_score(metric_df.y_orig, metric_df.yhat_scaled))
+    # print('mean_squared_error : ', mean_squared_error(metric_df.y_orig, metric_df.yhat_scaled))
+    # print('mean_absolute_error : ', mean_absolute_error(metric_df.y_orig, metric_df.yhat_scaled))
 
     #
     # change point detection
@@ -83,11 +83,7 @@ def extract_changepoints_from_prophet(company_name, stock_csv_file):
     # pd.to_numeric(cp_with_close['close'])
     print(cp_with_impact)
 
-    #
-    # calculate the impact of each changepoint
-    #
 
-    # cp_with_impact = calculate_impact(cp_with_close, 4)
     cp_with_impact.to_csv(
         '/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/data/changepoints/' + company_name + '_changepoints.csv',
         sep='\t'
