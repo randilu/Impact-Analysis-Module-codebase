@@ -223,7 +223,7 @@ def map_events(df, duration):
 
 def preprocess_stock_data(file):
     stock_data = pd.read_csv(file)
-    stock_data.columns = [x.lower() for x in stock_data.columns]
+    stock_data.columns = [x.lower() for x in stock_data.columns] #to lower case
     stock_data.to_csv(file, index=False)
 
 # file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/kelani_valley_final_combined_output.csv'
