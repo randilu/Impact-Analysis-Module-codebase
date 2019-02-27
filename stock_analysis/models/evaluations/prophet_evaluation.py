@@ -9,15 +9,15 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
 from sklearn.utils.testing import mock_mldata_urlopen
 
-from iam_util.iam_utils import calculate_impact
+# from iam_util.iam_utils import calculate_impact
 
 plt.rcParams['figure.figsize'] = (20, 10)
 # plt.style.use('fivethirtyeight')
 plt.style.use('ggplot')
 
 # reading from csv
-company_name = 'bogawantalawa'
-file = '/home/randilu/python_pojects/fyp/iam_model/data/stock_data/plantations/ bogawanthalawa.csv'
+company_name = 'namunukula'
+file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/namunukula.csv'
 stock_df = pd.read_csv(file, sep=',', encoding='utf-8', index_col='date', parse_dates=True)
 print(stock_df.head())
 df = stock_df.reset_index()
@@ -49,7 +49,7 @@ print(df_cv.head())
 # from fbprophet.diagnostics import performance_metrics
 df_p = performance_metrics(df_cv)
 print(df_p.head())
-df_p.to_csv('/home/randilu/python_pojects/fyp/iam_model/models/evaluations/' + company_name + '_evaluation.csv', sep=',',
+df_p.to_csv('/home/randilu/fyp_integration/Impact-Analysis-Module/stock_analysis/models/evaluations' + company_name + '_evaluation.csv', sep=',',
             encoding='utf-8', index=False)
 
 from fbprophet.plot import plot_cross_validation_metric

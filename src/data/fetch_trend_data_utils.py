@@ -6,11 +6,12 @@ import numpy as np
 from pandas import DataFrame
 from sklearn import preprocessing
 import datetime
-
-company_name = 'kelani_valley'
+from sklearn.exceptions import DataConversionWarning
+import warnings
 
 
 def normalize_trends(frame, kw_list):
+    warnings.filterwarnings(action='ignore', category=DataConversionWarning)
     min_max_scaler = preprocessing.MinMaxScaler()
     x_scaled = min_max_scaler.fit_transform(frame.get(kw_list))
     df = DataFrame(x_scaled)
@@ -51,7 +52,7 @@ def add_impact(df):
     return
 
 
-def add_impact_from_changepoints(file, stock_df, map_duration):
+def add_impact_from_changepoints(company_name, file, stock_df, map_duration):
     print(stock_df)
     cp_df = pd.read_csv(file, index_col=False, sep='\t', encoding='utf-8')
     cp_df.drop(columns='impact', inplace=True)
@@ -73,7 +74,9 @@ def add_impact_from_changepoints(file, stock_df, map_duration):
 
     result = pd.merge(stock_df, modified_cp_df, on=['date'], how='left')
     print(result)
-    result = result[['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'impact', 'isImpacted']]
+    result = result[
+        ['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'open', 'high', 'low', 'trades', 'shares',
+         'impact', 'isImpacted']]
     result['isImpacted'].fillna(0, inplace=True)
     result.to_csv(
         '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/' + company_name + '_final_combined_output.csv',
@@ -186,25 +189,43 @@ def populate_date_range(date, duration):
 
 def map_events(df, duration):
     # iterate through each tupple in the dataframe
-    new_df = pd.DataFrame(columns=['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'impact'])
-
+    new_df = pd.DataFrame(
+        columns=['date', 'kw_max', 'max_value', 'daily_news_vector_sum', 'close', 'open', 'high', 'low', 'trades',
+                 'shares', 'impact'])
+    print(new_df)
     for line, row in enumerate(df.itertuples(), 1):
         if row.isImpacted == 1 and row.Index > duration:
+            # print(row.Index)
             #
             # create a chunk of data frame from the whole data frame
             #
             temp_df = df.loc[row.Index - duration:row.Index]
+            # print(temp_df)
             #
             # sorting the chunked data frame from max trend value
             #
-            temp_df = temp_df.iloc[(-temp_df['max_value'].abs()).argsort()]
+            temp_df = temp_df.iloc[(-temp_df['max_value']).argsort()]
+            # print(temp_df)
             if row.impact > 0:
                 max_val = temp_df['max_value'].max()
+                key = temp_df['kw_max'].iloc[0]
             else:
                 max_val = temp_df['max_value'].min()
-            key = temp_df['kw_max'].iloc[0]
+                key = temp_df['kw_max'].iloc[-1]
+
             daily_news_vec = temp_df['daily_news_vector_sum'].iloc[0]
             new_df = new_df.append(
                 {'date': row.date, 'kw_max': key, 'max_value': max_val, 'daily_news_vector_sum': daily_news_vec,
-                 'close': row.close, 'impact': row.impact}, ignore_index=True)
+                 'close': row.close, 'open': row.open, 'high': row.high, 'low': row.low, 'trades': row.trades,
+                 'shares': row.shares, 'impact': row.impact}, ignore_index=True)
     return new_df
+
+
+def preprocess_stock_data(file):
+    stock_data = pd.read_csv(file)
+    stock_data.columns = [x.lower() for x in stock_data.columns] #to lower case
+    stock_data.to_csv(file, index=False)
+
+# file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/processed/events_impacted/kelani_valley_final_combined_output.csv'
+# df = pd.read_csv(file, index_col=False, sep=',', encoding='utf-8')
+# print(map_events(df,7))

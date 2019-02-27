@@ -1,10 +1,9 @@
-from deployment.read_from_s3 import download_object_from_s3
+from deployment.read_from_s3 import download_object_from_s3, download_csv_object_from_s3
 from deployment.write_to_s3 import upload_output_to_s3
 from src.constants.constants import *
-from src.data.fetch_trend_data_utils import display_max_cols
+
 from src.data.event_data.fetch_kw_format_dup_from_json import get_events_from_json
 from src.data.fetch_kw_from_csv import get_events_from_csv
-from src.data.fetch_trend_data_utils import preprocess_stock_data
 from src.data.trend_data.fetch_trend_data_with_date import fetch_trend_data_for_keywords
 from src.features.event_vector_dup_kw import create_event_vector
 
@@ -15,19 +14,11 @@ from stock_analysis.prophet_model import extract_changepoints_from_prophet
 company = COMPANY_NAME
 stock_data = STOCK_CSV
 input_json = JFILE
-events_csv = INPUT_EVENTS_CSV
-display_max_cols(30)
-
-# company = 'kelani_valley'
-# stock_data = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
-# input_json = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
-# events_csv = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/kelani_valley_events.csv'
 
 
-def main(company_name, stock_csv_file, jfile, events_csv_file):
+def generate_impact_main(company_name, stock_csv_file, jfile):
     try:
         global event_list
-
         try:
             extract_changepoints_from_prophet(company_name, stock_csv_file)
         except BaseException as e:
@@ -46,20 +37,20 @@ def main(company_name, stock_csv_file, jfile, events_csv_file):
             print("Error while creating effective points", e)
             return e
 
-        # try:
-        #     event_list = get_events_from_json(company_name, jfile)
-        # except BaseException as e:
-        #     print("Error while fetching events from json", e)
-
-        #
-        # manual input
-        #
-
         try:
-            event_list = get_events_from_csv(company_name, events_csv_file)
+            event_list = get_events_from_json(company_name, jfile)
         except BaseException as e:
-            print("Error while fetching events from csv", e)
-            return e
+            print("Error while fetching events from json", e)
+
+        # #
+        # # manual input
+        # #
+        #
+        # try:
+        #     event_list = get_events_from_csv(company_name, events_csv_file)
+        # except BaseException as e:
+        #     print("Error while fetching events from csv", e)
+        #     return e
 
         try:
             fetch_trend_data_for_keywords(event_list, company_name, stock_csv_file)
@@ -83,5 +74,13 @@ def main(company_name, stock_csv_file, jfile, events_csv_file):
         return error
 
 
-if __name__ == '__main__':
-    main(company, stock_data, input_json, events_csv)
+def trigger_main_process():
+    try:
+        download_object_from_s3(INPUT_BUCKET, INPUT_EVENTS_JSON_NAME, DESTINATION_TO_SAVE_INPUT_JSON)
+        download_csv_object_from_s3(STOCK_DATA_BUCKET, STOCK_DATA_OBJECT_NAME, DESTINATION_TO_SAVE_CSV)
+        # preprocess_stock_data(STOCK_CSV)
+    except BaseException as e:
+        print("Error while downloading from S3", e)
+        return e
+
+    generate_impact_main(company, stock_data, input_json)

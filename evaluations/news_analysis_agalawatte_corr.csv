@@ -1,0 +1,5 @@
+,max_trend,close,impact,daily_news_vector_sum
+max_trend,1.0,0.788,0.941,0.473
+close,0.788,1.0,0.844,-0.014
+impact,0.941,0.844,1.0,0.203
+daily_news_vector_sum,0.473,-0.014,0.203,1.0
