@@ -49,13 +49,13 @@ def activate_job():
             # time.sleep(2)
     run_job()
 
-    # thread = threading.Thread(target=run_job)activate_job()
-    # thread.start()
+    thread = threading.Thread(target=activate_job())
+    thread.start()
 
 
 if __name__ == "__main__":
     # activate_job()
-    # app.run()
-    activate_job()
+    # start_runner()
+    app.run()
     # activate_job()
 

@@ -1,4 +1,4 @@
-COMPANY_NAME = 'company'
+COMPANY_NAME = 'kelani_valley'
 BASE_PATH = '/home/randilu/fyp_integration/Impact-Analysis-Module'
 
 # TODO genaralize jfile
@@ -8,7 +8,7 @@ STOCK_CSV = BASE_PATH + '/data/external/stock-data-companies/' + COMPANY_NAME + 
 # manual input
 #
 # TODO
-INPUT_EVENTS_CSV = BASE_PATH + '/data/external/events/csv_files/kelani_valley_events.csv'
+INPUT_EVENTS_CSV = BASE_PATH + '/data/external/events/csv_files/'+COMPANY_NAME+'_events.csv'
 IMPACT_EVENTS_CSV = BASE_PATH + '/data/processed/final_output/' + COMPANY_NAME + '_impact_events.csv'
 
 INPUT_BUCKET = 'fypiamawsbucket'

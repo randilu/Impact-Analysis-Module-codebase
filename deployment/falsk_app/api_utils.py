@@ -31,6 +31,9 @@ def start_runner():
                 print('Server not yet started')
             time.sleep(2)
 
+    # print('Started runner')
+    # thread = threading.Thread(target=start_loop)
+    # thread.start()
 
 # @app.before_first_request
 # def activate_notifications():

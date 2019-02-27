@@ -12,39 +12,39 @@ from stock_analysis.iam_util.merge_cp_ip import create_combined_effective_points
 from stock_analysis.moving_avg import model_impacts_for_stock_data
 from stock_analysis.prophet_model import extract_changepoints_from_prophet
 
-# company = COMPANY_NAME
-# stock_data = STOCK_CSV
-# input_json = JFILE
-# events_csv = INPUT_EVENTS_CSV
+company = COMPANY_NAME
+stock_data = STOCK_CSV
+input_json = JFILE
+events_csv = INPUT_EVENTS_CSV
 display_max_cols(30)
 
-company = 'kelani_valley'
-stock_data = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
-input_json = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
-events_csv = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/kelani_valley_events.csv'
+# company = 'kelani_valley'
+# stock_data = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
+# input_json = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
+# events_csv = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/kelani_valley_events.csv'
 
 
 def main(company_name, stock_csv_file, jfile, events_csv_file):
     try:
         global event_list
 
-        # try:
-        #     extract_changepoints_from_prophet(company_name, stock_csv_file)
-        # except BaseException as e:
-        #     print("Error while extracting changepoints from prophet", e)
-        #     return e
+        try:
+            extract_changepoints_from_prophet(company_name, stock_csv_file)
+        except BaseException as e:
+            print("Error while extracting changepoints from prophet", e)
+            return e
 
-        # try:
-        #     model_impacts_for_stock_data(company_name, stock_csv_file)
-        # except BaseException as e:
-        #     print("Error while modeling impacts", e)
-        #     return e
-        #
-        # try:
-        #     create_combined_effective_points(company_name)
-        # except BaseException as e:
-        #     print("Error while creating effective points", e)
-        #     return e
+        try:
+            model_impacts_for_stock_data(company_name, stock_csv_file)
+        except BaseException as e:
+            print("Error while modeling impacts", e)
+            return e
+
+        try:
+            create_combined_effective_points(company_name)
+        except BaseException as e:
+            print("Error while creating effective points", e)
+            return e
 
         # try:
         #     event_list = get_events_from_json(company_name, jfile)
