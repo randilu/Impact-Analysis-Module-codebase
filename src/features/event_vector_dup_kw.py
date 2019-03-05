@@ -46,21 +46,3 @@ def create_event_vector(company_name):
     except BaseException as e:
         return e
 
-    # try:
-#     session = boto3.Session(
-#         aws_access_key_id='AKIAJC7S24JKRFDQAGVA',
-#         aws_secret_access_key='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',
-#     )
-#     s3 = session.resource('s3')
-#     s3.Object('finalyearprojectresources', 'impacts.json').put(Body=events_impact_json)
-#     print('Uploaded')
-#
-# except BaseException as e:
-#     print('Upload error')
-#     print(str(e))
-
-# #
-# # run manually
-# #
-#
-# create_event_vector(company_name)

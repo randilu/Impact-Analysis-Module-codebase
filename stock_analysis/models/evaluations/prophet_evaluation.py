@@ -62,26 +62,3 @@ plt.show()
 fig3 = plot_cross_validation_metric(df_cv, metric='rmse')
 plt.show()
 
-'''
-# Forecast for future dataframe
-forecast = model.predict(future)
-print(forecast.tail())
-print('Forecast: \n', forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
-forecast['yhat_scaled'] = np.exp(forecast['yhat'])
-model.plot(forecast)
-model.plot_components(forecast)
-plt.show()
-
-viz_df = df.join(forecast[['yhat_scaled', 'yhat', 'yhat_lower', 'yhat_upper']], how='outer')
-viz_df[['y_orig', 'yhat_scaled']].plot()
-plt.show()
-
-# performance metrics
-metric_df = forecast.set_index('ds')[['yhat_scaled']].join(df.set_index('ds').y_orig).reset_index()
-print(metric_df.tail())
-metric_df.dropna(inplace=True)
-print(metric_df.tail())
-print('r2_score : ', r2_score(metric_df.y_orig, metric_df.yhat_scaled))
-print('mean_squared_error : ', mean_squared_error(metric_df.y_orig, metric_df.yhat_scaled))
-print('mean_absolute_error : ', mean_absolute_error(metric_df.y_orig, metric_df.yhat_scaled))
-'''

@@ -18,12 +18,6 @@ input_json = JFILE
 events_csv = INPUT_EVENTS_CSV
 display_max_cols(30)
 
-# company = 'kelani_valley'
-# stock_data = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
-# input_json = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/stock-data-companies/kelani_valley.csv'
-# events_csv = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/csv_files/kelani_valley_events.csv'
-
-
 def main(company_name, stock_csv_file, jfile, events_csv_file):
     try:
         global event_list

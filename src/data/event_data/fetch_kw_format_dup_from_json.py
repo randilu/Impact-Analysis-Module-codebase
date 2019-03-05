@@ -54,7 +54,3 @@ def get_events_from_json(company_name, jfile):
     print(kw_sent_list)
     return kw_sent_list
 
-# #
-# # run manually
-# #
-# get_events_from_json(company_name, jfile)

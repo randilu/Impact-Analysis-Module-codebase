@@ -55,19 +55,3 @@ forecast_valid = np.exp(forecast_valid)
 rms = np.sqrt(np.mean(np.power((np.array(valid['y']) - np.array(forecast_valid)), 2)))
 print(rms)
 
-# # plot
-# valid['Predictions'] = 0
-# valid['Predictions'] = forecast_valid.values
-#
-# plt.plot(train['y_orig'])
-# plt.plot(valid[['y', 'Predictions']])
-# plt.show()
-
-# # performance metrics
-# metric_df = forecast.set_index('ds')[['yhat']].join(new_data.set_index('ds').y).reset_index()
-# print(metric_df.tail())
-# metric_df.dropna(inplace=True)
-# print(metric_df.tail())
-# print('r2_score : ', r2_score(metric_df.y, metric_df.yhat))
-# print('mean_squared_error : ', mean_squared_error(metric_df.y, metric_df.yhat))
-# print('mean_absolute_error : ', mean_absolute_error(metric_df.y, metric_df.yhat))

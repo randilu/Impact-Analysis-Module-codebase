@@ -4,14 +4,6 @@ import json
 from botocore.handlers import disable_signing
 from src.data.fetch_trend_data_utils import write_json_data_to_file
 
-# ACCESS_ID=
-# ACCESS_KEY=
-
-# s3_bucket_name = 'fypiamawsbucket'
-# object_name = 'KelaniValleyPlantations.json'
-# file = '/home/randilu/fyp_integration/Impact-Analysis-Module/data/external/events/eem/' + object_name
-
-
 def download_object_from_s3(s3_bucket_name, object_name, destination_to_save):
     try:
         s3 = boto3.resource('s3')

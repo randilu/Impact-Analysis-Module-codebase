@@ -30,12 +30,3 @@ def alert_for_sqs_notifications():
         else:
             print('no msgs')
             time.sleep(2)
-            # return False
-
-
-    # for message in messages:
-    #     print(message.body)
-    #     message.delete()  # delete the message from the queue
-    #
-    # response = queue.send_message(MessageBody='Hello by AWS SDK for Python!')
-# alert_for_sqs_notifications()

@@ -31,26 +31,3 @@ def start_runner():
                 print('Server not yet started')
             time.sleep(2)
 
-    # print('Started runner')
-    # thread = threading.Thread(target=start_loop)
-    # thread.start()
-
-# @app.before_first_request
-# def activate_notifications():
-#     def run_job():
-#         # status = True
-#         while True:
-#             print("Searching for SQS notifications...")
-#             # status = alert_for_sqs_notifications()
-#             time.sleep(3)
-#         # return
-#
-#     thread = threading.Thread(target=run_job)
-#     thread.start()
-#
-#
-# if __name__ == "__main__":
-#     # trigger for request
-#     # start_runner()
-#     app.run()
-#     activate_notifications()
